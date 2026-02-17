@@ -13,7 +13,7 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(""); 
+    setError("");
 
     if (!identifier || !password) {
       setError("Please enter username/email and password.");
@@ -21,12 +21,12 @@ const Login = () => {
     }
 
     try {
-      const success = await login(identifier, password);
+      const loginRes = await login(identifier, password);
 
-      if (success) {
-        navigate("/dashboard"); 
+      if (loginRes.success) {
+        navigate("/dashboard");
       } else {
-        setError("Invalid username or password."); 
+        setError("Invalid username or password.");
         console.log("Login attempt failed for:", identifier);
       }
     } catch (err) {
