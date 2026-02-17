@@ -6,14 +6,13 @@ import Login from "./pages/auth/Login";
 import { AuthProvider } from "./context/AuthContext";
 import { Routes, Route } from "react-router-dom";
 import Dashboard from "./pages/dashboard/Dashboard";
+import Register from "./pages/auth/Register";
 
 function App() {
-  const [count, setCount] = useState(0);
-
-
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
+      <Route path="/register" element ={<Register/>}/>
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="*" element={<Login />} />
     </Routes>

@@ -5,10 +5,10 @@ export const AuthContext = createContext({});
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [token, setToken] = useState(localStorage.getItem("token") || "");
+  const [token, setToken] = useState(localStorage.getItem("accessToken") || "");
 
   useEffect(() => {
-    const savedToken = localStorage.getItem("token");
+    const savedToken = localStorage.getItem("accessToken");
     if (savedToken) {
       setToken(savedToken);
       fetchUser(savedToken);
@@ -44,7 +44,7 @@ export const AuthProvider = ({ children }) => {
       const data = response.data;
       setUser(data);
       setToken(data.token);
-      localStorage.setItem("token", data.accessToken);
+      localStorage.setItem("accessToken", data.accessToken);
 
       return { success: true, data };
     } catch (err) {
@@ -58,7 +58,7 @@ export const AuthProvider = ({ children }) => {
   const logout = () => {
     setUser(null);
     setToken("");
-    localStorage.removeItem("token");
+    localStorage.removeItem("accessToken");
   };
 
   return (
