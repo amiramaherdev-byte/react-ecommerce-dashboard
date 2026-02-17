@@ -8,14 +8,19 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem("token") || "");
 
   useEffect(() => {
-    if (token) {
-      fetchUser(token);
+    const savedToken = localStorage.getItem("token");
+    if (savedToken) {
+      setToken(savedToken);
+      fetchUser(savedToken);
     }
-  }, [token]);
+  }, []);
 
   const fetchUser = async (token) => {
     try {
-      const response = await api.get("/auth/users/1");
+      const response = await api.get("/auth/users/1", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
       console.log(response);
       setUser(response.data);
     } catch (err) {
@@ -39,12 +44,12 @@ export const AuthProvider = ({ children }) => {
       const data = response.data;
       setUser(data);
       setToken(data.token);
-      localStorage.setItem("token", data.token);
+      localStorage.setItem("token", data.accessToken);
 
       return { success: true, data };
     } catch (err) {
       console.error(err.response?.data || err.message);
-      console.log("Login failed", error);
+      console.log("Login failed", err);
 
       return { success: false, error: err.response?.data || err.message };
     }
