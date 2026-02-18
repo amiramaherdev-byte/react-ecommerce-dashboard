@@ -1,7 +1,6 @@
 import React, { useContext, useState } from "react";
 import { Card, Container, Form, Button, Alert } from "react-bootstrap";
 import { AuthContext } from "../../context/AuthContext";
-import api from "../../services/api";
 import { useNavigate } from "react-router-dom";
 
 const Register = () => {
