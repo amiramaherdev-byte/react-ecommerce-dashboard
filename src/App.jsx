@@ -9,6 +9,7 @@ import Dashboard from "./pages/dashboard/Dashboard";
 import Register from "./pages/auth/Register";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import AuthRoute from "./routes/AuthRoute";
+import ProductList from "./pages/products/ProductList";
 
 
 function App() {
@@ -17,6 +18,9 @@ function App() {
       <Routes>
         <Route path="/login" element={<AuthRoute><Login /></AuthRoute>} />
         <Route path="/register" element={<Register />} />
+        <Route path="/products" element ={            <ProtectedRoute>
+<ProductList/>            </ProtectedRoute>
+}/>
         
 
         <Route
