@@ -9,7 +9,7 @@ import {
   Spinner,
   Button,
 } from "react-bootstrap";
-const ProductList = () => {
+const ProductList = ({ search }) => {
   const [products, setProducts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalProducts, setTotalProducts] = useState(0);
@@ -17,13 +17,15 @@ const ProductList = () => {
 
   const itemsPerPage = 6;
 
-  const fetchProducts = useCallback(async (page) => {
+  const fetchProducts = useCallback(async (page,searchTerm) => {
     setLoading(true);
 
     try {
-      const res = await api.get(
-        `/products?limit=${itemsPerPage}&skip=${(page - 1) * itemsPerPage}`,
-      );
+      const endpoint = search
+        ? `/products/search?q=${searchTerm}&limit=${itemsPerPage}&skip=${(page - 1) * itemsPerPage}`
+        : `/products?limit=${itemsPerPage}&skip=${(page - 1) * itemsPerPage}`;
+
+      const res = await api.get(endpoint);
       setProducts(res.data.products);
       //   console.log(res.data);
 
@@ -35,12 +37,15 @@ const ProductList = () => {
   }, []);
 
   useEffect(() => {
-    fetchProducts(currentPage);
-  }, [fetchProducts, currentPage]);
+    fetchProducts(currentPage, search);
+  }, [fetchProducts, currentPage, search]);
 
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [search]);
   const totalPages = Math.ceil(totalProducts / itemsPerPage);
   return (
-    <Container>
+    <Container className="mt-4">
       {loading ? (
         <div className="d-flex justify-content-center align-items-center vh-100">
           <Spinner animation="border" />

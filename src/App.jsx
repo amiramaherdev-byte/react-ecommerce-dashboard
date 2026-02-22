@@ -10,18 +10,32 @@ import Register from "./pages/auth/Register";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import AuthRoute from "./routes/AuthRoute";
 import ProductList from "./pages/products/ProductList";
-
-
+import NavBar from "./components/Navbar";
 function App() {
+  const [search, setSearch] = useState("");
+
   return (
     <>
+      <NavBar search={search} setSearch={setSearch} />
+
       <Routes>
-        <Route path="/login" element={<AuthRoute><Login /></AuthRoute>} />
+        <Route
+          path="/login"
+          element={
+            <AuthRoute>
+              <Login />
+            </AuthRoute>
+          }
+        />
         <Route path="/register" element={<Register />} />
-        <Route path="/products" element ={            <ProtectedRoute>
-<ProductList/>            </ProtectedRoute>
-}/>
-        
+        <Route
+          path="/products"
+          element={
+            <ProtectedRoute>
+              <ProductList search={search} />
+            </ProtectedRoute>
+          }
+        />
 
         <Route
           path="/dashboard"
@@ -34,7 +48,6 @@ function App() {
 
         <Route path="*" element={<Login />} />
       </Routes>
-
     </>
   );
 }
