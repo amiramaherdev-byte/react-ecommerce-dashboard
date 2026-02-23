@@ -1,9 +1,6 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
+import { useEffect, useState } from "react";
 import "./App.css";
 import Login from "./pages/auth/Login";
-import { AuthProvider } from "./context/AuthContext";
 import { Routes, Route, Navigate } from "react-router-dom";
 import Dashboard from "./pages/dashboard/Dashboard";
 import Register from "./pages/auth/Register";
@@ -11,14 +8,20 @@ import ProtectedRoute from "./routes/ProtectedRoute";
 import AuthRoute from "./routes/AuthRoute";
 import ProductList from "./pages/products/ProductList";
 import NavBar from "./components/Navbar";
+import ProductDetails from "./pages/products/ProductDetails";
+import axios from "axios";
+import { Table } from "react-bootstrap";
 function App() {
   const [search, setSearch] = useState("");
+
+  const [users, setUsers] = useState([]);
+
 
   return (
     <>
       <NavBar search={search} setSearch={setSearch} />
 
-      <Routes>
+       <Routes>
         <Route
           path="/login"
           element={
@@ -36,6 +39,7 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route path="/products/:id" element={<ProductDetails />} />
 
         <Route
           path="/dashboard"
