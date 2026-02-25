@@ -14,7 +14,7 @@ const ProductDetails = () => {
         const res = await api.get(`/products/${id}`);
         setProduct(res.data);
       } catch (err) {
-        console.log(err);
+        // console.log(err);
       }
     };
     fetchProduct();
