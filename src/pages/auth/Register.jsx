@@ -31,7 +31,7 @@ const Register = () => {
       const registerRes = await login(username, password);
       if (!registerRes.success) {
         setError("Login after register failed");
-        console.log("Login attempt failed for:", username);
+        // console.log("Login attempt failed for:", username);
       } else {
         navigate("/dashboard");
       }

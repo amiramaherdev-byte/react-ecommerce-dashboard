@@ -21,10 +21,10 @@ export const AuthProvider = ({ children }) => {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      console.log(response);
+      // console.log(response);
       setUser(response.data);
     } catch (err) {
-      console.log(err);
+      // console.log(err);
       logout();
     }
   };
@@ -37,9 +37,9 @@ export const AuthProvider = ({ children }) => {
         username: identifier, // username or email
         password,
       });
-      console.log(response);
+      // console.log(response);
 
-      console.log("Response data:", response.data);
+      // console.log("Response data:", response.data);
 
       const data = response.data;
       setUser(data);
@@ -49,7 +49,7 @@ export const AuthProvider = ({ children }) => {
       return { success: true, data };
     } catch (err) {
       console.error(err.response?.data || err.message);
-      console.log("Login failed", err);
+      // console.log("Login failed", err);
 
       return { success: false, error: err.response?.data || err.message };
     }
