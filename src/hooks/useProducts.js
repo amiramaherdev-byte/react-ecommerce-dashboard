@@ -50,6 +50,10 @@ const useProducts = (search) => {
           "price-asc": (a, b) => a.price - b.price,
           "price-desc": (a, b) => b.price - a.price,
           rating: (a, b) => b.rating - a.rating,
+          "title-asc": (a, b) =>
+            a.title.localeCompare(b.title, undefined, { sensitivity: "base" }),
+          "title-desc": (a, b) =>
+            b.title.localeCompare(a.title, undefined, { sensitivity: "base" }),
         };
 
         if (sortBy && sortMethods[sortBy]) {
