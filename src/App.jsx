@@ -9,19 +9,18 @@ import AuthRoute from "./routes/AuthRoute";
 import ProductList from "./pages/products/ProductList";
 import NavBar from "./components/Navbar";
 import ProductDetails from "./pages/products/ProductDetails";
-import axios from "axios";
-import { Table } from "react-bootstrap";
+import CartList from "./pages/carts/CartList";
+import CartDetails from "./pages/carts/CartDetails";
 function App() {
   const [search, setSearch] = useState("");
 
   const [users, setUsers] = useState([]);
 
-
   return (
     <>
       <NavBar search={search} setSearch={setSearch} />
 
-       <Routes>
+      <Routes>
         <Route
           path="/login"
           element={
@@ -39,7 +38,17 @@ function App() {
             </ProtectedRoute>
           }
         />
+
         <Route path="/products/:id" element={<ProductDetails />} />
+        <Route
+          path="/carts"
+          element={
+            <ProtectedRoute>
+              <CartList />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="/carts/:id" element={<CartDetails />} />
 
         <Route
           path="/dashboard"
