@@ -11,11 +11,10 @@ import NavBar from "./components/Navbar";
 import ProductDetails from "./pages/products/ProductDetails";
 import CartList from "./pages/carts/CartList";
 import CartDetails from "./pages/carts/CartDetails";
+import UsersList from "./pages/users/UsersList";
+import UsersDetails from "./pages/users/UsersDetails";
 function App() {
   const [search, setSearch] = useState("");
-
-  const [users, setUsers] = useState([]);
-
   return (
     <>
       <NavBar search={search} setSearch={setSearch} />
@@ -49,6 +48,9 @@ function App() {
           }
         />
         <Route path="/carts/:id" element={<CartDetails />} />
+
+        <Route path="/users" element={<UsersList />} />
+        <Route path="/users/:id" element={<UsersDetails />} />
 
         <Route
           path="/dashboard"

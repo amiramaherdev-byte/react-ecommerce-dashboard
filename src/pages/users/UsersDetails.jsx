@@ -1,0 +1,34 @@
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import api from "../../services/api";
+import UserCard from "../../components/Users/UserCard";
+
+const UsersDetails = () => {
+  const { id } = useParams();
+  const [user, setUser] = useState(null);
+
+  console.log(id);
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const res = await api.get(`/users/${id}`);
+
+        setUser(res.data);
+      } catch (err) {}
+    };
+
+    fetchUsers();
+  }, [id]);
+
+  useEffect(() => {
+    console.log(user);
+  }, [user]);
+  return (
+    <div>
+      <UserCard user={user} />
+    </div>
+  );
+};
+
+export default UsersDetails;
