@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import "./App.css";
+import { useState } from "react";
 import Login from "./pages/auth/Login";
 import { Routes, Route, Navigate } from "react-router-dom";
 import Dashboard from "./pages/dashboard/Dashboard";
@@ -13,6 +12,8 @@ import CartList from "./pages/carts/CartList";
 import CartDetails from "./pages/carts/CartDetails";
 import UsersList from "./pages/users/UsersList";
 import UsersDetails from "./pages/users/UsersDetails";
+import { ToastContainer } from "react-toastify";
+
 function App() {
   const [search, setSearch] = useState("");
   return (
@@ -63,6 +64,7 @@ function App() {
 
         <Route path="*" element={<Login />} />
       </Routes>
+      <ToastContainer />
     </>
   );
 }

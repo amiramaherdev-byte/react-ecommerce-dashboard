@@ -1,31 +1,76 @@
-import { Col, Container, Row, Spinner } from "react-bootstrap";
+import { useEffect, useState } from "react";
+import { Col, Container, Row, Spinner, Button } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
 import ProductCard from "../../components/Products/ProductCard";
 import Pagination from "../../components/Pagination/Pagination";
-import useProducts from "../../hooks/useProducts";
 import ProductControls from "../../components/Products/ProductControls";
+import CustomModal from "../../components/UI/CustomModal";
+
+import { fetchProducts } from "../../features/products/productsSlice";
+import ProductForm from "../../components/Products/ProductForm";
+
 const ProductList = ({ search }) => {
-  const {
-    products,
-    loading,
-    error,
-    currentPage,
-    totalPages,
-    setCurrentPage,
-    category,
-    setCategory,
-    sortBy,
-    setSortBy,
-  } = useProducts(search);
+  const [showModal, setShowModal] = useState(false);
+  const openModal = () => setShowModal(true);
+  const closeModal = () => setShowModal(false);
+
+  const dispatch = useDispatch();
+
+  const { products, total, status, error } = useSelector(
+    (state) => state.products,
+  );
+
+  const [category, setCategory] = useState("");
+  const [sortBy, setSortBy] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [debouncedSearch, setDebouncedSearch] = useState(search);
+  const [productToEdit, setProductToEdit] = useState(null);
+
+  const itemsPerPage = 6;
+  const totalPages = Math.ceil(total / itemsPerPage);
+
+  // debounce search
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearch(search);
+      setCurrentPage(1);
+    }, 500);
+    return () => clearTimeout(handler);
+  }, [search]);
+
+  // fetch products whenever filters/search/page change
+  useEffect(() => {
+    dispatch(
+      fetchProducts({
+        search: debouncedSearch,
+        category,
+        sortBy,
+        currentPage,
+      }),
+    );
+  }, [dispatch, debouncedSearch, category, sortBy, currentPage]);
 
   return (
     <Container className="mt-4">
+      {/* Error */}
       {error && <p style={{ color: "red" }}>{error}</p>}
-      {loading ? (
+
+      {/* Loading */}
+      {status === "loading" ? (
         <div className="d-flex justify-content-center align-items-center vh-100">
           <Spinner animation="border" />
         </div>
       ) : (
         <>
+          <div className="d-flex justify-content-between align-items-center mb-3">
+            <h4 className="mb-0">Products</h4>
+            <Button variant="primary" onClick={openModal}>
+              + Add Product
+            </Button>
+          </div>
+
+          {/* Filters */}
           <ProductControls
             category={category}
             setCategory={setCategory}
@@ -33,22 +78,54 @@ const ProductList = ({ search }) => {
             setSortBy={setSortBy}
           />
 
+          {/* Product Grid */}
           <Row xs={1} md={3} lg={4} className="g-4">
             {products.map((product) => (
               <Col key={product.id}>
-                <ProductCard product={product} />
+                <ProductCard
+                  product={product}
+                  productToEdit={productToEdit}
+                  setProductToEdit={setProductToEdit}
+                  tags={Array.isArray(product.tags) ? product.tags : []}
+                  onEdit={() => {
+                    setProductToEdit(product);
+                    openModal();
+                  }}
+                />
               </Col>
             ))}
           </Row>
         </>
       )}
 
+      {/* Pagination */}
       <Pagination
         currentPage={currentPage}
         totalPages={totalPages}
-        loading={loading}
+        loading={status === "loading"}
         setCurrentPage={setCurrentPage}
       />
+
+      <CustomModal
+        show={showModal}
+        title={productToEdit ? "Edit Product" : "Add New Product"}
+        handleClose={() => {
+          closeModal();
+          setProductToEdit(null);
+        }}
+      >
+        <ProductForm
+          setShowModal={setShowModal}
+          productToEdit={productToEdit}
+          currentSearch={debouncedSearch}
+          currentCategory={category}
+          currentSort={sortBy}
+          currentPage={currentPage}
+          setProductToEdit={setProductToEdit}
+          resetPage={() => setCurrentPage(1)}
+          title={productToEdit ? "Edit Product" : "Add New Product"}
+        />
+      </CustomModal>
     </Container>
   );
 };

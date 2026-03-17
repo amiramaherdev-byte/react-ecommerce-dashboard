@@ -5,7 +5,7 @@ import { Container, Spinner } from "react-bootstrap";
 import CardDetails from "../../components/Products/CardDetails";
 
 const ProductDetails = () => {
-  const {id} = useParams();
+  const { id } = useParams();
   const [product, setProduct] = useState(null);
 
   useEffect(() => {
@@ -14,7 +14,9 @@ const ProductDetails = () => {
         const res = await api.get(`/products/${id}`);
         setProduct(res.data);
       } catch (err) {
-        // console.log(err);
+        toast.error(
+          err.response?.data?.message || err.message || "Something went wrong",
+        );
       }
     };
     fetchProduct();
@@ -24,9 +26,8 @@ const ProductDetails = () => {
 
   return (
     <Container>
-      <CardDetails product={product}/>
+      <CardDetails product={product} />
     </Container>
-
   );
 };
 
