@@ -1,28 +1,94 @@
 import React from "react";
-import { Card, ListGroup } from "react-bootstrap";
+import { Button, Card, Badge } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { deleteProduct , deleteLocalProduct } from "../../features/products/productsSlice";
+import "./products.css";
+import { toast } from "react-toastify"; 
 
-const ProductCard = ({ product }) => {
+
+const ProductCard = ({ product, onEdit }) => {
+  const dispatch = useDispatch();
+const handleDelete = async (product) => {
+  if (!window.confirm("Are you sure?")) return;
+
+  try {
+    if (product.isLocal) {
+      dispatch(deleteLocalProduct(product.id));
+      toast.success("Local product deleted");
+    } else {
+      await dispatch(deleteProduct(product.id)).unwrap();
+      toast.success("Product deleted successfully");
+    }
+  } catch (err) {
+    toast.error(err.response?.data?.message || err.message || "Something went wrong");
+    console.error(err);
+  }
+};
+
   return (
-    <Card className="w-100">
+    <Card className="h-100 shadow-sm border-0 d-flex flex-column">
       <Link
         to={`/products/${product.id}`}
         style={{ textDecoration: "none", color: "inherit" }}
       >
-        <Card.Img variant="top" src={product.images[0]} />
-        <Card.Body>
-          <Card.Title>{product.title}</Card.Title>
-          <Card.Text className="line-clamp-2 ">{product.description}</Card.Text>
+        <Card.Img
+          variant="top"
+          src={product.images?.[0]}
+          style={{
+            height: "200px",
+            objectFit: "cover",
+          }}
+        />
+
+        <Card.Body className="d-flex flex-column">
+          <Card.Title className="fs-6 fw-bold card-title">
+            {product.title}
+          </Card.Title>
+
+          <Card.Text className="card-text">
+            {product.description.slice(0, 60)}...
+          </Card.Text>
+
+          <h5 className="text-primary">${product.price}</h5>
         </Card.Body>
       </Link>
-      <ListGroup className="list-group-flush">
-        <ListGroup.Item>{product.price}</ListGroup.Item>
-        <ListGroup.Item>{product.stock}</ListGroup.Item>
-        {product.tags &&
-          product.tags.map((tag, index) => (
-            <ListGroup.Item key={index}>{tag}</ListGroup.Item>
-          ))}
-      </ListGroup>
+
+      <Card.Body>
+        {/* tags */}
+        <div className="mb-3 mt-auto tags-container">
+      
+          <div className="mb-3 mt-auto tags-container">
+  {Array.isArray(product.tags) &&
+    product.tags.slice(0, 3).map((tag, index) => (
+      <Badge bg="secondary" className="me-1" key={index}>
+        {tag}
+      </Badge>
+    ))}
+</div>
+        </div>
+
+        {/* buttons */}
+        <div className="d-flex gap-2 mt-auto d-flex justify-content-between">
+          <Button
+            variant="outline-warning"
+            size="sm"
+            className="w-100"
+            onClick={onEdit}
+          >
+            Edit
+          </Button>
+
+          <Button
+            variant="outline-danger"
+            size="sm"
+            className="w-100"
+            onClick={() => handleDelete(product)}
+          >
+            Delete
+          </Button>
+        </div>
+      </Card.Body>
     </Card>
   );
 };
