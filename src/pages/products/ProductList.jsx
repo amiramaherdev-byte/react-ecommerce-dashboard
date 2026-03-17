@@ -8,6 +8,7 @@ import CustomModal from "../../components/UI/CustomModal";
 
 import { fetchProducts } from "../../features/products/productsSlice";
 import ProductForm from "../../components/Products/ProductForm";
+import { toast } from "react-toastify";
 
 const ProductList = ({ search }) => {
   const [showModal, setShowModal] = useState(false);
@@ -41,21 +42,28 @@ const ProductList = ({ search }) => {
 
   // fetch products whenever filters/search/page change
   useEffect(() => {
-    dispatch(
-      fetchProducts({
-        search: debouncedSearch,
-        category,
-        sortBy,
-        currentPage,
-      }),
-    );
+    const fetchData = async () => {
+      try {
+        await dispatch(
+          fetchProducts({
+            search: debouncedSearch,
+            category,
+            sortBy,
+            currentPage,
+          }),
+        ).unwrap();
+      } catch (err) {
+        toast.error(
+          err.response?.data?.message || err.message || "Failed to fetch products",
+        );
+        console.error(err);
+      }
+    };
+    fetchData();
   }, [dispatch, debouncedSearch, category, sortBy, currentPage]);
 
   return (
     <Container className="mt-4">
-      {/* Error */}
-      {error && <p style={{ color: "red" }}>{error}</p>}
-
       {/* Loading */}
       {status === "loading" ? (
         <div className="d-flex justify-content-center align-items-center vh-100">
