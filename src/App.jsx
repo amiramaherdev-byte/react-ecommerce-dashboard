@@ -8,10 +8,13 @@ import AuthRoute from "./routes/AuthRoute";
 import ProductList from "./pages/products/ProductList";
 import NavBar from "./components/Navbar";
 import ProductDetails from "./pages/products/ProductDetails";
+import Cart from "./pages/carts/Cart";
 import CartList from "./pages/carts/CartList";
+
 import UsersList from "./pages/users/UsersList";
 import UsersDetails from "./pages/users/UsersDetails";
 import { ToastContainer } from "react-toastify";
+import CartDetails from "./pages/carts/CartDetails";
 
 function App() {
   const [search, setSearch] = useState("");
@@ -40,6 +43,14 @@ function App() {
 
         <Route path="/products/:id" element={<ProductDetails />} />
         <Route
+          path="/cart"
+          element={
+            <ProtectedRoute>
+              <Cart />
+            </ProtectedRoute>
+          }
+        />
+          <Route
           path="/carts"
           element={
             <ProtectedRoute>
@@ -47,6 +58,16 @@ function App() {
             </ProtectedRoute>
           }
         />
+              <Route
+          path="/carts"
+          element={
+            <ProtectedRoute>
+              <CartList />
+            </ProtectedRoute>
+          }
+        />
+
+              <Route path="/carts/:id" element={<CartDetails />} />
 
         <Route path="/users" element={<UsersList />} />
         <Route path="/users/:id" element={<UsersDetails />} />

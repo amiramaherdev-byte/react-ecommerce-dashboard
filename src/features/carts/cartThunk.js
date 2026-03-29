@@ -25,6 +25,14 @@ export const fetchCart = createAsyncThunk(
     }));
   }
 );
+
+export const fetchAllCarts = createAsyncThunk(
+  "carts/fetchAll",
+  async () => {
+    const res = await api.get("/carts");
+    return res.data.carts;
+  }
+);
   
 export const addOrUpdateProductAPI = createAsyncThunk(
   "cart/addOrUpdateProduct",

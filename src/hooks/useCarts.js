@@ -15,7 +15,7 @@ const useCarts = () => {
     const fetchCarts = async () => {
       setLoading(true);
       try {
-        const res = await api.get("/carts");
+        const res = await api.get("/cart");
         const cartsData = res.data.carts;
         setCarts(cartsData || []);
       
