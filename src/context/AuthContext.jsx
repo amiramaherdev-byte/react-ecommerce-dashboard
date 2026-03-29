@@ -9,56 +9,34 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const savedToken = localStorage.getItem("accessToken");
-    if (savedToken) {
+    const savedUser = localStorage.getItem("currentUser");
+    if (savedToken && savedUser) {
       setToken(savedToken);
-      fetchUser(savedToken);
+      setUser(JSON.parse(savedUser));
     }
   }, []);
 
-  const fetchUser = async (token) => {
-    try {
-      const response = await api.get("/auth/users/1", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      // console.log(response);
-      setUser(response.data);
-    } catch (err) {
-      // console.log(err);
-      logout();
-    }
-  };
-
   const login = async (identifier, password) => {
-    console.log("Login function started");
-
     try {
-      const response = await api.post("/auth/login", {
-        username: identifier, // username or email
-        password,
-      });
-      // console.log(response);
-
-      // console.log("Response data:", response.data);
-
+      const response = await api.post("/auth/login", { username: identifier, password });
       const data = response.data;
       setUser(data);
       setToken(data.accessToken);
-    localStorage.setItem("accessToken", data.accessToken);
+
+      localStorage.setItem("accessToken", data.accessToken);
+      localStorage.setItem("currentUser", JSON.stringify(data));
 
       return { success: true, data };
     } catch (err) {
-      console.error(err.response?.data || err.message);
-      // console.log("Login failed", err);
-
       return { success: false, error: err.response?.data || err.message };
     }
   };
 
   const logout = () => {
     setUser(null);
-    setToken("");
+    setToken(null);
     localStorage.removeItem("accessToken");
+    localStorage.removeItem("currentUser");
   };
 
   return (
