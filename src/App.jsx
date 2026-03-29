@@ -9,7 +9,6 @@ import ProductList from "./pages/products/ProductList";
 import NavBar from "./components/Navbar";
 import ProductDetails from "./pages/products/ProductDetails";
 import CartList from "./pages/carts/CartList";
-import CartDetails from "./pages/carts/CartDetails";
 import UsersList from "./pages/users/UsersList";
 import UsersDetails from "./pages/users/UsersDetails";
 import { ToastContainer } from "react-toastify";
@@ -48,7 +47,6 @@ function App() {
             </ProtectedRoute>
           }
         />
-        <Route path="/carts/:id" element={<CartDetails />} />
 
         <Route path="/users" element={<UsersList />} />
         <Route path="/users/:id" element={<UsersDetails />} />

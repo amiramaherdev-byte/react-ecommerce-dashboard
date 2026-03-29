@@ -5,6 +5,7 @@ import { useDispatch } from "react-redux";
 import { deleteProduct , deleteLocalProduct } from "../../features/products/productsSlice";
 import "./products.css";
 import { toast } from "react-toastify"; 
+import { addToCart } from "../../features/carts/cartSlice";
 
 
 const ProductCard = ({ product, onEdit }) => {
@@ -24,6 +25,23 @@ const handleDelete = async (product) => {
     toast.error(err.response?.data?.message || err.message || "Something went wrong");
     console.error(err);
   }
+};
+
+const handleAdd = () => {
+  if (!product.id || !product.title || product.price == null) {
+    console.error("Product missing required fields!", product);
+    return;
+  }
+
+  dispatch(
+    addToCart({
+      id: product.id,
+      title: product.title,
+      price: product.price,
+      quantity: 1, // default quantity
+      image: product.images?.[0] || "", // optional
+    })
+  );
 };
 
   return (
@@ -87,6 +105,20 @@ const handleDelete = async (product) => {
           >
             Delete
           </Button>
+        </div>
+          <div className="d-flex gap-2 mt-auto d-flex justify-content-between">
+      
+
+          <Button
+            variant="outline-primary"
+            size="sm"
+            className="w-100 mt-1"
+            onClick={handleAdd}
+          >
+            Add to card
+          </Button>
+
+
         </div>
       </Card.Body>
     </Card>
