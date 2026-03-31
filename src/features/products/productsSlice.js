@@ -98,6 +98,8 @@ const productsSlice = createSlice({
     total: 0,
     status: "idle",
     error: null,
+    search: "",
+    currentPage: 1,
   },
 
   reducers: {
@@ -115,8 +117,11 @@ const productsSlice = createSlice({
     },
 
     deleteLocalProduct: (state, action) => {
-      
       state.products = state.products.filter((p) => p.id !== action.payload);
+    },
+    setProductSearch: (state, action) => {
+      state.search = action.payload;
+      state.currentPage = 1;
     },
   },
 
@@ -170,6 +175,7 @@ const productsSlice = createSlice({
   },
 });
 
+export const { updateLocalProduct, deleteLocalProduct, setProductSearch } =
+  productsSlice.actions;
+
 export default productsSlice.reducer;
-export const { updateLocalProduct , deleteLocalProduct
- } = productsSlice.actions;

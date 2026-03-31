@@ -3,8 +3,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import CartCard from "../../components/carts/CartCard";
 import { fetchAllCarts } from "../../features/carts/cartThunk";
+import { toast } from "react-toastify";
 
 const CartList = () => {
+
   const dispatch = useDispatch();
 
   const { carts, loading, error } = useSelector(
@@ -14,6 +16,12 @@ const CartList = () => {
   useEffect(() => {
     dispatch(fetchAllCarts());
   }, [dispatch]);
+
+  useEffect(() => {
+  if (error) {
+    toast.error(error);
+  }
+}, [error]);
 
   return (
     <Container className="mt-4">

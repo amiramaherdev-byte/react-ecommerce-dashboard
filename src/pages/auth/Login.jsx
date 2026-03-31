@@ -1,83 +1,62 @@
-import React, { useContext, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, Form, Card, Container } from "react-bootstrap";
-import { AuthContext } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { login } from "../../features/auth/authSlice";
 
 const Login = () => {
-  const { login } = useContext(AuthContext);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const { loading, error, token } = useSelector((state) => state.auth);
 
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
 
-    if (!identifier || !password) {
-      setError("Please enter username/email and password.");
-      return;
-    }
+    if (!identifier || !password) return;
 
-    try {
-      const loginRes = await login(identifier, password);
+    const res = await dispatch(
+      login({ identifier, password })
+    );
 
-      if (loginRes.success) {
-        navigate("/dashboard");
-      } else {
-        setError("Invalid username or password.");
-        console.log("Login attempt failed for:", identifier);
-      }
-    } catch (err) {
-      const msg =
-        err.response?.data?.message || err.message || "Something went wrong";
-      setError(msg);
-      console.log("Technical error:", err);
+    if (res.meta.requestStatus === "fulfilled") {
+      navigate("/dashboard");
     }
   };
 
   return (
     <Container className="d-flex justify-content-center align-items-center vh-100">
       <Card style={{ width: "500px", padding: "25px" }}>
-        {error && <p style={{ color: "red", textAlign: "center" }}>{error}</p>}
+        {error && <p style={{ color: "red" }}>{error}</p>}
 
         <h3 className="mb-3 text-center">Login</h3>
+
         <Form onSubmit={handleSubmit}>
-          <Form.Group className="mb-3" controlId="formBasicEmail">
+          <Form.Group className="mb-3">
             <Form.Label>Username or Email</Form.Label>
             <Form.Control
               type="text"
-              placeholder="Enter username or email"
               value={identifier}
               onChange={(e) => setIdentifier(e.target.value)}
-              required
             />
           </Form.Group>
 
-          <Form.Group className="mb-3" controlId="formBasicPassword">
+          <Form.Group className="mb-3">
             <Form.Label>Password</Form.Label>
             <Form.Control
               type="password"
-              placeholder="Enter password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              required
             />
           </Form.Group>
 
-          <div className="d-flex justify-content-center">
-            <Button variant="primary" type="submit">
-              Submit
-            </Button>
-          </div>
+          <Button type="submit" disabled={loading}>
+            {loading ? "Loading..." : "Login"}
+          </Button>
         </Form>
-
-        <div className="mt-3 text-center">
-          <small>
-            Don't have an account? <a href="/register">Register</a>
-          </small>
-        </div>
       </Card>
     </Container>
   );

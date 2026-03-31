@@ -10,20 +10,21 @@ import { fetchProducts } from "../../features/products/productsSlice";
 import ProductForm from "../../components/Products/ProductForm";
 import { toast } from "react-toastify";
 
-const ProductList = ({ search }) => {
+const ProductList = () => {
+
+  const dispatch = useDispatch();
+  const {  total, status, error , currentPage, products,search } = useSelector(
+    (state) => state.products,
+  );
+
   const [showModal, setShowModal] = useState(false);
   const openModal = () => setShowModal(true);
   const closeModal = () => setShowModal(false);
 
-  const dispatch = useDispatch();
 
-  const { products, total, status, error } = useSelector(
-    (state) => state.products,
-  );
 
   const [category, setCategory] = useState("");
   const [sortBy, setSortBy] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
   const [debouncedSearch, setDebouncedSearch] = useState(search);
   const [productToEdit, setProductToEdit] = useState(null);
 
@@ -35,13 +36,11 @@ const ProductList = ({ search }) => {
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedSearch(search);
-      setCurrentPage(1);
     }, 500);
     return () => clearTimeout(handler);
   }, [search]);
 
-  // fetch products whenever filters/search/page change
-  useEffect(() => {
+    useEffect(() => {
     const fetchData = async () => {
       try {
         await dispatch(
@@ -111,7 +110,7 @@ const ProductList = ({ search }) => {
         currentPage={currentPage}
         totalPages={totalPages}
         loading={status === "loading"}
-        setCurrentPage={setCurrentPage}
+        // setCurrentPage={setCurrentPage}
       />
 
       <CustomModal

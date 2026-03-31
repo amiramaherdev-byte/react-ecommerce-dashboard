@@ -1,19 +1,27 @@
-import React, { useContext } from 'react'
-import { AuthContext } from '../context/AuthContext';
-import { Button } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
+import { Button } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { logout } from "../features/auth/authSlice";
+import { FiLogOut } from "react-icons/fi";
 
 const LogoutButton = () => {
-    const {logout} = useContext(AuthContext);
-    const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate("/login");
+  };
 
-const handleLogout =()=>{
-    logout();
-    navigate("./login")
-}
   return (
-    <Button onClick={handleLogout} variant="danger">log out</Button>
-  )
-}
+        <Button
+      onClick={handleLogout}
+      variant="danger"
+      className="d-flex align-items-center gap-1"
+    >
+      <FiLogOut /> 
+      Log out
+    </Button>
+  );
+};
 
-export default LogoutButton
+export default LogoutButton;

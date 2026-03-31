@@ -1,43 +1,78 @@
-import { Container, Dropdown, Form, Spinner, Table } from "react-bootstrap";
+import { useEffect, useState } from "react";
+import {
+  Container,
+  Form,
+  Spinner,
+  Table,
+  Dropdown,
+  Button,
+} from "react-bootstrap";
 import { Pencil, Trash, Eye, ThreeDotsVertical } from "react-bootstrap-icons";
+import { useSelector, useDispatch } from "react-redux";
+import { fetchUsers, deleteUser } from "../../features/users/usersThunks";
+import {
+  setSearch,
+  setCurrentPage,
+  deleteLocalUser,
+} from "../../features/users/usersSlice";
+import CustomModal from "../../components/UI/CustomModal";
 import SearchInput from "../../components/ٍSearch/SearchInput";
 import Pagination from "../../components/Pagination/Pagination";
-import useUsers from "../../hooks/useUsers";
-import { useState } from "react";
-import CustomModal from "../../components/UI/CustomModal";
-import UserCard from "../../components/Users/UserCard";
+import { toast } from "react-toastify";
+import UserForm from "../../components/Users/UserForm";
 
 const UsersList = () => {
-  const {
-    users,
-    loading,
-    search,
-    setSearch,
-    currentPage,
-    setCurrentPage,
-    totalPages,
-    err,
-  } = useUsers();
+  const dispatch = useDispatch();
+  const { users, loading, search, currentPage, totalUsers, error } =
+    useSelector((state) => state.users);
 
   const [showModal, setShowModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
 
-  const openModal = (user) => {
+  const itemsPerPage = 6;
+  const totalPages = Math.ceil(totalUsers / itemsPerPage);
+
+  const openModal = (user = null) => {
     setSelectedUser(user);
     setShowModal(true);
   };
-
   const closeModal = () => setShowModal(false);
 
+  useEffect(() => {
+    dispatch(fetchUsers({ search, page: currentPage, limit: itemsPerPage }))
+      .unwrap()
+      .catch((err) => toast.error(err));
+  }, [dispatch, search, currentPage]);
+
+  const handleDelete = async (user) => {
+    if (!window.confirm("Are you sure?")) return;
+
+    try {
+      if (user.isLocal) {
+        dispatch(deleteLocalUser(user.id));
+        toast.success("Local user deleted");
+      } else {
+        await dispatch(deleteUser(user.id)).unwrap();
+        toast.success("User deleted successfully");
+      }
+    } catch (err) {
+      toast.error(
+        err.response?.data?.message || err.message || "Something went wrong",
+      );
+      console.error(err);
+    }
+  };
   return (
     <Container>
-      {err && <p className="mt-4 text-danger">{err}</p>}
+      {error && <p className="mt-4 text-danger">{error}</p>}
 
-      <Form className="mt-4">
+      {/* Search */}
+      <Form className="mt-4 mb-3">
         <SearchInput
           value={search}
-          onChange={setSearch}
+          onChange={(val) => dispatch(setSearch(val))}
           placeholder="Search Users..."
+          className="form-control"
         />
       </Form>
 
@@ -47,17 +82,24 @@ const UsersList = () => {
         </div>
       ) : (
         <>
-          <Table>
+          <div className="d-flex justify-content-between align-items-center mb-3">
+            <h4 className="mb-0">Users</h4>
+            <Button variant="primary" onClick={() => openModal()}>
+              + Add User
+            </Button>
+          </div>
+
+          <Table striped hover responsive>
             <thead>
               <tr>
-                <td>Name</td>
-                <td>Email</td>
-                <td>Role</td>
-                <td>Actions</td>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
-              {users && users.length > 0 ? (
+              {users.length > 0 ? (
                 users.map((user) => (
                   <tr key={user.id}>
                     <td>{user.firstName}</td>
@@ -67,23 +109,24 @@ const UsersList = () => {
                       <Dropdown>
                         <Dropdown.Toggle
                           variant="light"
-                          id="dropdown-basic"
                           style={{ border: "none" }}
                         >
                           <ThreeDotsVertical />
                         </Dropdown.Toggle>
-
                         <Dropdown.Menu>
+                          <Dropdown.Item onClick={() => openModal(user)}>
+                            <Eye /> View / Edit
+                          </Dropdown.Item>
                           <Dropdown.Item
                             onClick={() => openModal(user)}
-                            style={{ cursor: "pointer" }}
+                            className="text-warning"
                           >
-                            <Eye /> View
-                          </Dropdown.Item>
-                          <Dropdown.Item>
                             <Pencil /> Edit
                           </Dropdown.Item>
-                          <Dropdown.Item className="text-danger">
+                          <Dropdown.Item
+                            onClick={() => handleDelete(user)}
+                            className="text-danger"
+                          >
                             <Trash /> Delete
                           </Dropdown.Item>
                         </Dropdown.Menu>
@@ -93,29 +136,34 @@ const UsersList = () => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="4">No users found</td>
+                  <td colSpan="4" className="text-center">
+                    No users found
+                  </td>
                 </tr>
               )}
             </tbody>
           </Table>
 
-          {/* Modal */}
+          {/* Modal for Add/Edit */}
           <CustomModal
             show={showModal}
             handleClose={closeModal}
-            title="User Details"
+            title={selectedUser ? "Edit User" : "Add User"}
           >
-            {selectedUser && <UserCard user={selectedUser} />}
+            <UserForm
+              user={selectedUser}
+              closeModal={closeModal}
+              dispatch={dispatch}
+            />
           </CustomModal>
+
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            setCurrentPage={(page) => dispatch(setCurrentPage(page))}
+          />
         </>
       )}
-
-      <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        loading={loading}
-        setCurrentPage={setCurrentPage}
-      />
     </Container>
   );
 };

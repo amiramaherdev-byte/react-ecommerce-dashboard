@@ -1,15 +1,14 @@
-import React, { useContext } from "react";
-import { AuthContext } from "../context/AuthContext";
 import { Navigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
-const AuthRoute = ({children}) => {
-  const { token } = useContext(AuthContext);
+const AuthRoute = ({ children }) => {
+  const { token } = useSelector((state) => state.auth);
 
   if (token) {
     return <Navigate to="/dashboard" replace />;
   }
-  return children;
 
+  return children;
 };
 
 export default AuthRoute;
