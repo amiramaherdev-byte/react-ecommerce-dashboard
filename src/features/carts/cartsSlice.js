@@ -11,13 +11,15 @@ const cartsSlice = createSlice({
     builder
       .addCase(fetchAllCarts.pending, (state) => {
         state.loading = true;
+        state.error = null;
       })
       .addCase(fetchAllCarts.fulfilled, (state, action) => {
         state.loading = false;
         state.carts = action.payload;
       })
-      .addCase(fetchAllCarts.rejected, (state) => {
+      .addCase(fetchAllCarts.rejected, (state,action) => {
         state.loading = false;
+        state.error = action.error.message;
       });
   },
 });

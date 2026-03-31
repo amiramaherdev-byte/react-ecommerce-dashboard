@@ -1,6 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useContext } from "react";
-import { AuthContext } from "../../context/AuthContext";
 import { Container, Row, Col, Button, Card } from "react-bootstrap";
 import {
   fetchCart,
@@ -13,21 +12,22 @@ import {
   decreaseQty,
   setCartFromAPI,
 } from "../../features/carts/cartSlice";
-import { Link } from "react-router-dom";
-const Cart = () => {
+
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+const Cart = ({ loggedInUser }) => {
   const dispatch = useDispatch();
   const items = useSelector((state) => state.cart.items);
-  const { user } = useContext(AuthContext);
-
-  const userId = user?.id;
 
   useEffect(() => {
-    if (userId) {
-      dispatch(fetchCart(userId)).then((action) => {
+    if (loggedInUser) {
+      console.log(loggedInUser);
+      dispatch(fetchCart(loggedInUser.id)).then((action) => {
         dispatch(setCartFromAPI(action.payload));
       });
     }
-  }, [userId, dispatch]);
+  }, [loggedInUser, dispatch]);
+
   const handleIncrease = (item) => {
     dispatch(
       updateQtyAPI({
@@ -59,12 +59,8 @@ const Cart = () => {
         <p>Your cart is empty</p>
       ) : (
         <Row>
-
-
-
           {items.map((item) => (
             <Col key={item.id} xs={12} className="mb-3">
-              
               <div className="border p-3 rounded d-flex justify-content-between align-items-center">
                 <div>
                   <h5>{item.title}</h5>
@@ -76,12 +72,13 @@ const Cart = () => {
                     onClick={() => {
                       dispatch(
                         addOrUpdateProductAPI({
-                          userId: user.id,
+                          userId: loggedInUser.id,
                           product: { ...item, quantity: item.quantity - 1 },
                           currentItems: items,
                         }),
                       );
                       dispatch(decreaseQty(item.id));
+                      toast.info(`${item.title} quantity decreased`);
                     }}
                     disabled={item.quantity <= 1}
                   >
@@ -95,12 +92,13 @@ const Cart = () => {
                     onClick={() => {
                       dispatch(
                         addOrUpdateProductAPI({
-                          userId: user.id,
+                          userId: loggedInUser.id,
                           product: { ...item, quantity: item.quantity + 1 },
                           currentItems: items,
                         }),
                       );
                       dispatch(increaseQty(item.id));
+                      toast.success(`${item.title} quantity increased`);
                     }}
                   >
                     +
@@ -111,12 +109,13 @@ const Cart = () => {
                     onClick={() => {
                       dispatch(
                         removeProductAPI({
-                          userId: user.id,
+                          userId: loggedInUser.id,
                           productId: item.id,
                           currentItems: items,
                         }),
                       );
                       dispatch(removeFromCart(item.id));
+                      toast.error(`${item.title} removed from cart`);
                     }}
                   >
                     Remove
@@ -124,11 +123,7 @@ const Cart = () => {
                 </div>
               </div>
             </Col>
-
-            
           ))}
-
-     
         </Row>
       )}
     </Container>

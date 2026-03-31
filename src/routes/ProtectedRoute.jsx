@@ -1,11 +1,10 @@
-import { useContext } from "react";
-import { AuthContext } from "../context/AuthContext";
 import {  Navigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 
 const ProtectedRoute = ({ children }) => {
-  const { token } = useContext(AuthContext);
-// console.log("token in protected:", token);
+    const { token } = useSelector((state) => state.auth);
+
 
   if (!token) {
     return <Navigate to="/login" replace />;
@@ -14,3 +13,5 @@ const ProtectedRoute = ({ children }) => {
 };
 
 export default ProtectedRoute;
+
+

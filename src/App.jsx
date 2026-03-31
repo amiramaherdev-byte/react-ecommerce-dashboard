@@ -1,26 +1,53 @@
-import { useState } from "react";
+import { useEffect } from "react";
+import { Routes, Route } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+
 import Login from "./pages/auth/Login";
-import { Routes, Route, Navigate } from "react-router-dom";
-import Dashboard from "./pages/dashboard/Dashboard";
 import Register from "./pages/auth/Register";
-import ProtectedRoute from "./routes/ProtectedRoute";
-import AuthRoute from "./routes/AuthRoute";
+import Dashboard from "./pages/dashboard/Dashboard";
 import ProductList from "./pages/products/ProductList";
-import NavBar from "./components/Navbar";
 import ProductDetails from "./pages/products/ProductDetails";
 import Cart from "./pages/carts/Cart";
 import CartList from "./pages/carts/CartList";
-
+import CartDetails from "./pages/carts/CartDetails";
 import UsersList from "./pages/users/UsersList";
 import UsersDetails from "./pages/users/UsersDetails";
+
+import ProtectedRoute from "./routes/ProtectedRoute";
+import AuthRoute from "./routes/AuthRoute";
+
 import { ToastContainer } from "react-toastify";
-import CartDetails from "./pages/carts/CartDetails";
+import { fetchUsers } from "./features/users/usersThunks";
+import Navbar from "./components/Navbar";
 
 function App() {
-  const [search, setSearch] = useState("");
+  const dispatch = useDispatch();
+
+  const { users, currentPage, error, search } = useSelector(
+    (state) => state.users,
+  );
+
+  const { user: currentUser } = useSelector((state) => state.auth);
+
+  // 🔄 fetch users
+  useEffect(() => {
+    dispatch(fetchUsers({ search, currentPage }));
+  }, [dispatch, search, currentPage]);
+
+  // 🔥 error handling
+  useEffect(() => {
+    if (error) {
+      console.log(error);
+    }
+  }, [error]);
+
+  // 🔐 current logged user
+  const loggedInUser = users.find((u) => u?.id === currentUser?.id);
+
+
   return (
     <>
-      <NavBar search={search} setSearch={setSearch} />
+      <Navbar loggedInUser={loggedInUser} />
 
       <Routes>
         <Route
@@ -31,34 +58,30 @@ function App() {
             </AuthRoute>
           }
         />
+
         <Route path="/register" element={<Register />} />
+
         <Route
           path="/products"
           element={
             <ProtectedRoute>
-              <ProductList search={search} />
+              <ProductList />
             </ProtectedRoute>
           }
         />
 
         <Route path="/products/:id" element={<ProductDetails />} />
+
         <Route
           path="/cart"
           element={
             <ProtectedRoute>
-              <Cart />
+              <Cart loggedInUser={loggedInUser} />
             </ProtectedRoute>
           }
         />
-          <Route
-          path="/carts"
-          element={
-            <ProtectedRoute>
-              <CartList />
-            </ProtectedRoute>
-          }
-        />
-              <Route
+
+        <Route
           path="/carts"
           element={
             <ProtectedRoute>
@@ -67,7 +90,14 @@ function App() {
           }
         />
 
-              <Route path="/carts/:id" element={<CartDetails />} />
+        <Route
+          path="/carts/:id"
+          element={
+            <ProtectedRoute>
+              <CartDetails />
+            </ProtectedRoute>
+          }
+        />
 
         <Route path="/users" element={<UsersList />} />
         <Route path="/users/:id" element={<UsersDetails />} />
@@ -83,7 +113,8 @@ function App() {
 
         <Route path="*" element={<Login />} />
       </Routes>
-      <ToastContainer />
+
+      <ToastContainer position="top-right" autoClose={2000}  />
     </>
   );
 }
