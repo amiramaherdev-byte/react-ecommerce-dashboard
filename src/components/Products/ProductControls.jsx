@@ -1,8 +1,6 @@
 import { Form, Row, Col } from "react-bootstrap";
-import useCategory from "../../hooks/useCategory";
 
-const ProductControls = ({ category, setCategory, sortBy, setSortBy }) => {
-  const { categories } = useCategory();
+const ProductControls = ({ category, setCategory, sortBy, setSortBy, categories }) => {
 
   return (
     <Row className="mb-3">

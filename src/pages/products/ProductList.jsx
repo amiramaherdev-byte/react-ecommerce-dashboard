@@ -6,17 +6,21 @@ import Pagination from "../../components/Pagination/Pagination";
 import ProductControls from "../../components/Products/ProductControls";
 import CustomModal from "../../components/UI/CustomModal";
 
-import { fetchProducts } from "../../features/products/productsSlice";
+import { fetchProducts , getCategories } from "../../features/products/productsSlice";
 import ProductForm from "../../components/Products/ProductForm";
 import { toast } from "react-toastify";
 
 const ProductList = () => {
 
   const dispatch = useDispatch();
-  const {  total, status, error , currentPage, products,search } = useSelector(
+  const {  total, status, error , currentPage, products,search , categories } = useSelector(
     (state) => state.products,
   );
 
+
+useEffect(() => {
+  dispatch(getCategories());
+}, [dispatch]);
   const [showModal, setShowModal] = useState(false);
   const openModal = () => setShowModal(true);
   const closeModal = () => setShowModal(false);
@@ -83,6 +87,7 @@ const ProductList = () => {
             setCategory={setCategory}
             sortBy={sortBy}
             setSortBy={setSortBy}
+            categories={categories}
           />
 
           {/* Product Grid */}
