@@ -5,6 +5,7 @@ import {
   createProductAPI,
   updateProductAPI,
   deleteProductAPI,
+  fetchCategories,
 } from "./productsAPI";
 
 export const fetchProducts = createAsyncThunk(
@@ -57,6 +58,18 @@ export const fetchProducts = createAsyncThunk(
   },
 );
 
+export const getCategories = createAsyncThunk(
+  "products/getCategories",
+  async (_, { signal, rejectWithValue }) => {
+    try {
+      const categories = await fetchCategories("/products/categories", signal);
+      return categories;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  },
+);
+
 export const createProduct = createAsyncThunk(
   "products/createProduct",
   async (data, { rejectWithValue }) => {
@@ -100,6 +113,7 @@ const productsSlice = createSlice({
     error: null,
     search: "",
     currentPage: 1,
+    categories: [],
   },
 
   reducers: {
@@ -126,6 +140,20 @@ const productsSlice = createSlice({
   },
 
   extraReducers: (builder) => {
+    builder
+      .addCase(getCategories.pending, (state) => {
+        state.status = "loading";
+      })
+
+      .addCase(getCategories.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.categories = action.payload;
+      })
+
+      .addCase(getCategories.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload;
+      });
     builder
       .addCase(fetchProducts.pending, (state) => {
         state.status = "loading";
