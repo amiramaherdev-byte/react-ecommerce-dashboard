@@ -14,8 +14,8 @@ import UsersDetails from "./pages/users/UsersDetails";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import AuthRoute from "./routes/AuthRoute";
 import { toast, ToastContainer } from "react-toastify";
-import { fetchUsers } from "./features/users/usersThunks";
-import Navbar from "./components/Navbar";
+import { fetchUsers } from "./features/users/usersThunks";import Navbar from "./components/NavBar";
+import Navbar from "./components/NavBar";
 import { Spinner } from "react-bootstrap";
 
 function App() {
