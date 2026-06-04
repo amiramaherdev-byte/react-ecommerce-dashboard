@@ -32,14 +32,13 @@ const usersSlice = createSlice({
       }
     },
 
-        deleteLocalUser: (state, action) => {
-      
+    deleteLocalUser: (state, action) => {
       state.users = state.users.filter((u) => u.id !== action.payload);
     },
     addLocalUser: (state, action) => {
       const newUser = {
         ...action.payload,
-        id: Date.now(), 
+        id: Date.now(),
         isLocal: true,
       };
       state.users.unshift(newUser);
@@ -78,6 +77,12 @@ const usersSlice = createSlice({
   },
 });
 
-export const { setSearch, setCurrentPage, updateLocalUser, addLocalUser ,deleteLocalUser } =
-  usersSlice.actions;
+export const {
+  setSearch,
+  setCurrentPage,
+  updateLocalUser,
+  addLocalUser,
+  deleteLocalUser,
+
+} = usersSlice.actions;
 export default usersSlice.reducer;

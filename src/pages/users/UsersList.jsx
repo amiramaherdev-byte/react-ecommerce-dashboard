@@ -1,12 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  Container,
-  Form,
-  Spinner,
-  Table,
-  Dropdown,
-  Button,
-} from "react-bootstrap";
+
 import { Pencil, Trash, Eye, ThreeDotsVertical } from "react-bootstrap-icons";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchUsers, deleteUser } from "../../features/users/usersThunks";
@@ -15,20 +8,24 @@ import {
   setCurrentPage,
   deleteLocalUser,
 } from "../../features/users/usersSlice";
-import CustomModal from "../../components/UI/CustomModal";
-import SearchInput from "../../components/ٍSearch/SearchInput";
+import { Container, Form, Spinner, Button } from "react-bootstrap";
+
 import Pagination from "../../components/Pagination/Pagination";
 import { toast } from "react-toastify";
 import UserForm from "../../components/Users/UserForm";
+import { FaUsers } from "react-icons/fa";
+import UsersTable from "../../components/Users/UsersTable";
+import CustomModal from "../../components/UI/CustomModal";
+import SearchInput from "../../components/Search/SearchInput";
 
-const UsersList = () => {
+const UsersList = ({loggedInUser}) => {
   const dispatch = useDispatch();
   const { users, loading, search, currentPage, totalUsers, error } =
     useSelector((state) => state.users);
 
   const [showModal, setShowModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
-
+  const [sortBy, setSortBy] = useState("");
   const itemsPerPage = 6;
   const totalPages = Math.ceil(totalUsers / itemsPerPage);
 
@@ -38,42 +35,64 @@ const UsersList = () => {
   };
   const closeModal = () => setShowModal(false);
 
+
   useEffect(() => {
-    dispatch(fetchUsers({ search, page: currentPage, limit: itemsPerPage }))
+    dispatch(
+      fetchUsers({
+        search,
+        page: currentPage,
+        limit: itemsPerPage,
+        sortBy,
+      }),
+    )
       .unwrap()
       .catch((err) => toast.error(err));
-  }, [dispatch, search, currentPage]);
+  }, [dispatch, search, currentPage, sortBy]);
 
-  const handleDelete = async (user) => {
-    if (!window.confirm("Are you sure?")) return;
-
-    try {
-      if (user.isLocal) {
-        dispatch(deleteLocalUser(user.id));
-        toast.success("Local user deleted");
-      } else {
-        await dispatch(deleteUser(user.id)).unwrap();
-        toast.success("User deleted successfully");
-      }
-    } catch (err) {
-      toast.error(
-        err.response?.data?.message || err.message || "Something went wrong",
-      );
-      console.error(err);
-    }
-  };
   return (
     <Container>
-      {error && <p className="mt-4 text-danger">{error}</p>}
+      <div
+        className="topbar text-white px-4 py-3 mb-4 rounded-4 shadow"
+        style={{
+          background: "linear-gradient(135deg, #10b981, #059669)",
+        }}
+      >
+        <div className="d-flex align-items-center gap-3">
+          <div
+            className="bg-white text-success rounded-circle d-flex align-items-center justify-content-center"
+            style={{ width: "50px", height: "50px" }}
+          >
+            <FaUsers size={22} />
+          </div>
+
+          <div>
+            <h3 className="mb-0 fw-bold">Users</h3>
+            <p className="mb-0 text-light opacity-75">
+              Manage users and account information
+            </p>
+          </div>
+        </div>
+      </div>
+      {error && toast.error({ error })}
 
       {/* Search */}
-      <Form className="mt-4 mb-3">
+      <Form className="mt-4 mb-3 d-flex gap-2">
         <SearchInput
           value={search}
           onChange={(val) => dispatch(setSearch(val))}
           placeholder="Search Users..."
           className="form-control"
         />
+
+        <select
+          className="form-control"
+          value={sortBy}
+          onChange={(e) => setSortBy(e.target.value)}
+        >
+          <option value="">Sort By</option>
+          <option value="name-asc">Name A → Z</option>
+          <option value="name-desc">Name Z → A</option>
+        </select>
       </Form>
 
       {loading ? (
@@ -84,65 +103,28 @@ const UsersList = () => {
         <>
           <div className="d-flex justify-content-between align-items-center mb-3">
             <h4 className="mb-0">Users</h4>
+
+ {loggedInUser?.role === "admin" && (
+            <Button
+              variant="light"
+              className="fw-semibold px-4 py-2 rounded-3"
+              onClick={openModal}
+            >
+              + Add Product
+            </Button>
+          )}
+
+
             <Button variant="primary" onClick={() => openModal()}>
               + Add User
             </Button>
           </div>
 
-          <Table striped hover responsive>
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Role</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {users.length > 0 ? (
-                users.map((user) => (
-                  <tr key={user.id}>
-                    <td>{user.firstName}</td>
-                    <td>{user.email}</td>
-                    <td>{user.role}</td>
-                    <td>
-                      <Dropdown>
-                        <Dropdown.Toggle
-                          variant="light"
-                          style={{ border: "none" }}
-                        >
-                          <ThreeDotsVertical />
-                        </Dropdown.Toggle>
-                        <Dropdown.Menu>
-                          <Dropdown.Item onClick={() => openModal(user)}>
-                            <Eye /> View / Edit
-                          </Dropdown.Item>
-                          <Dropdown.Item
-                            onClick={() => openModal(user)}
-                            className="text-warning"
-                          >
-                            <Pencil /> Edit
-                          </Dropdown.Item>
-                          <Dropdown.Item
-                            onClick={() => handleDelete(user)}
-                            className="text-danger"
-                          >
-                            <Trash /> Delete
-                          </Dropdown.Item>
-                        </Dropdown.Menu>
-                      </Dropdown>
-                    </td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="4" className="text-center">
-                    No users found
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </Table>
+          <UsersTable
+            users={users}
+            openModal={openModal}
+            showModal={showModal}
+          ></UsersTable>
 
           {/* Modal for Add/Edit */}
           <CustomModal
