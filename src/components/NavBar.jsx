@@ -11,17 +11,11 @@ import {
   FaShoppingBag,
 } from "react-icons/fa";
 import LogoutButton from "./LogoutButton";
-import { setProductSearch } from "../features/products/productsSlice";
-import SearchInput from "./Search/SearchInput";
 
 const Navbar = ({ loggedInUser }) => {
   const [show, setShow] = useState(false);
   // Desktop collapse
   const [collapsed, setCollapsed] = useState(false);
-  const dispatch = useDispatch();
-  const location = useLocation();
-  const isProductsPage = location.pathname.startsWith("/products");
-  const searchValue = useSelector((state) => state.products.search);
   const cartItems = useSelector((state) => state.cart.items || []);
   const totalQty = cartItems.reduce((sum, item) => sum + item.quantity, 0);
   const { token } = useSelector((state) => state.auth);
@@ -127,17 +121,7 @@ const Navbar = ({ loggedInUser }) => {
             </Link>
           </div>
         )}
-        {/* Search */}
-        {!collapsed && isProductsPage && (
-          <Form className="mt-4">
-            <SearchInput
-              value={searchValue}
-              onChange={(val) => dispatch(setProductSearch(val))}
-              placeholder="Search Products..."
-              className="form-control"
-            />
-          </Form>
-        )}
+     
       </div>
 
       {/* Logout */}
