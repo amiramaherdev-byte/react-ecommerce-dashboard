@@ -21,7 +21,6 @@ const Cart = ({ loggedInUser }) => {
 
   useEffect(() => {
     if (loggedInUser) {
-      console.log(loggedInUser);
       dispatch(fetchCart(loggedInUser.id)).then((action) => {
         dispatch(setCartFromAPI(action.payload));
       });

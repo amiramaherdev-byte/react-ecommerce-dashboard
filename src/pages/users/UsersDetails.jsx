@@ -7,8 +7,6 @@ const UsersDetails = () => {
   const { id } = useParams();
   const [user, setUser] = useState(null);
 
-  console.log(id);
-
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -21,9 +19,6 @@ const UsersDetails = () => {
     fetchUsers();
   }, [id]);
 
-  useEffect(() => {
-    console.log(user);
-  }, [user]);
   return (
     <div>
       <UserCard user={user} />

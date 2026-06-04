@@ -3,24 +3,52 @@ import api from "../../services/api";
 
 export const fetchUsers = createAsyncThunk(
   "users/fetchAll",
-  async ({ search = "", page = 1, limit = 6 }, { rejectWithValue }) => {
+  async (
+    { search = "", page = 1, limit = 6, sortBy, roleFilter } = {},
+    { rejectWithValue },
+  ) => {
     try {
-      const skip = (page - 1) * limit;
+      const skip = Number(page - 1) * limit;
 
       let endpoint = `/users?limit=${limit}&skip=${skip}`;
-
       if (search) {
         endpoint = `/users/search?q=${search}&limit=${limit}&skip=${skip}`;
       }
 
       const res = await api.get(endpoint);
-      return res.data; 
-    } catch (err) {
-      return rejectWithValue(err.response?.data?.message || "Failed to fetch users");
-    }
-  }
-);
 
+      let users = res.data.users;
+
+      const sortMethods = {
+        "name-asc": (a, b) =>
+          `${a.firstName} ${a.lastName}`.localeCompare(
+            `${b.firstName} ${b.lastName}`,
+            undefined,
+            { sensitivity: "base" },
+          ),
+        "name-desc": (a, b) =>
+          `${b.firstName} ${b.lastName}`.localeCompare(
+            `${a.firstName} ${a.lastName}`,
+            undefined,
+            { sensitivity: "base" },
+          ),
+      };
+
+      if (sortBy && sortMethods[sortBy]) {
+        users = [...users].sort(sortMethods[sortBy]);
+      }
+
+      return {
+        ...res.data,
+        users,
+      };
+    } catch (err) {
+      return rejectWithValue(
+        err.response?.data?.message || "Failed to fetch users",
+      );
+    }
+  },
+);
 export const fetchUserById = createAsyncThunk(
   "users/fetchById",
   async (id, { rejectWithValue }) => {
@@ -28,9 +56,11 @@ export const fetchUserById = createAsyncThunk(
       const res = await api.get(`/users/${id}`);
       return res.data;
     } catch (err) {
-      return rejectWithValue(err.response?.data?.message || "Failed to fetch user");
+      return rejectWithValue(
+        err.response?.data?.message || "Failed to fetch user",
+      );
     }
-  }
+  },
 );
 
 export const addUser = createAsyncThunk(
@@ -40,9 +70,11 @@ export const addUser = createAsyncThunk(
       const res = await api.post("/users/add", user);
       return res.data;
     } catch (err) {
-      return rejectWithValue(err.response?.data?.message || "Failed to add user");
+      return rejectWithValue(
+        err.response?.data?.message || "Failed to add user",
+      );
     }
-  }
+  },
 );
 
 export const updateUser = createAsyncThunk(
@@ -52,9 +84,11 @@ export const updateUser = createAsyncThunk(
       const res = await api.put(`/users/${id}`, data);
       return res.data;
     } catch (err) {
-      return rejectWithValue(err.response?.data?.message || "Failed to update user");
+      return rejectWithValue(
+        err.response?.data?.message || "Failed to update user",
+      );
     }
-  }
+  },
 );
 
 export const deleteUser = createAsyncThunk(
@@ -62,9 +96,11 @@ export const deleteUser = createAsyncThunk(
   async (id, { rejectWithValue }) => {
     try {
       await api.delete(`/users/${id}`);
-      return id; 
+      return id;
     } catch (err) {
-      return rejectWithValue(err.response?.data?.message || "Failed to delete user");
+      return rejectWithValue(
+        err.response?.data?.message || "Failed to delete user",
+      );
     }
-  }
+  },
 );

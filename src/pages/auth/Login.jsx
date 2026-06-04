@@ -1,26 +1,40 @@
 import React, { useState, useEffect } from "react";
 import { Button, Form, Card, Container } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../features/auth/authSlice";
+import { toast } from "react-toastify";
+import { validateAuth } from "../../utils/validation/authValidation";
 
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { loading, error, token } = useSelector((state) => state.auth);
+  const { loading, error } = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    if (error) {
+      toast.error(error);
+    }
+  }, [error]);
 
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
+  const [formErrors, setFormErrors] = useState({});
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!identifier || !password) return;
+    const errors = validateAuth({ identifier, password }, true);
 
-    const res = await dispatch(
-      login({ identifier, password })
-    );
+    if (Object.keys(errors).length > 0) {
+      setFormErrors(errors);
+      return;
+    }
+
+    setFormErrors({});
+
+    const res = await dispatch(login({ identifier, password }));
 
     if (res.meta.requestStatus === "fulfilled") {
       navigate("/dashboard");
@@ -30,9 +44,21 @@ const Login = () => {
   return (
     <Container className="d-flex justify-content-center align-items-center vh-100">
       <Card style={{ width: "500px", padding: "25px" }}>
-        {error && <p style={{ color: "red" }}>{error}</p>}
-
         <h3 className="mb-3 text-center">Login</h3>
+
+        {/* Demo Credentials Box */}
+        <div className="bg-light border rounded p-3 mb-3">
+          <h6 className="mb-2 text-primary">Demo Credentials</h6>
+
+          <div className="small">
+            <div>
+              <strong>Username:</strong> emilys
+            </div>
+            <div>
+              <strong>Password:</strong> emilyspass
+            </div>
+          </div>
+        </div>
 
         <Form onSubmit={handleSubmit}>
           <Form.Group className="mb-3">
@@ -41,7 +67,11 @@ const Login = () => {
               type="text"
               value={identifier}
               onChange={(e) => setIdentifier(e.target.value)}
+              isInvalid={!!formErrors.identifier}
             />
+            <Form.Control.Feedback type="invalid">
+              {formErrors.identifier}
+            </Form.Control.Feedback>
           </Form.Group>
 
           <Form.Group className="mb-3">
@@ -50,12 +80,22 @@ const Login = () => {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              isInvalid={!!formErrors.password}
             />
+            <Form.Control.Feedback type="invalid">
+              {formErrors.password}
+            </Form.Control.Feedback>
           </Form.Group>
 
           <Button type="submit" disabled={loading}>
             {loading ? "Loading..." : "Login"}
           </Button>
+
+          <div className="d-flex justify-content-center mt-3">
+            <p className="mb-0">
+              Don't have an account? <Link to="/register">Register</Link>
+            </p>
+          </div>
         </Form>
       </Card>
     </Container>

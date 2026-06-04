@@ -5,7 +5,6 @@ import {
   createProduct,
   updateProduct,
   updateLocalProduct,
-  
 } from "../../features/products/productsSlice";
 import { toast } from "react-toastify";
 import TagsInput from "./TagsInput";

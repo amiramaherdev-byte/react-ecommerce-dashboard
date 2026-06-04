@@ -5,15 +5,31 @@ export const login = createAsyncThunk(
   "auth/login",
   async ({ identifier, password }, { rejectWithValue }) => {
     try {
+      // login request
       const res = await api.post("/auth/login", {
         username: identifier,
         password,
       });
 
-      localStorage.setItem("accessToken", res.data.accessToken);
-      localStorage.setItem("currentUser", JSON.stringify(res.data));
+      const loginData = res.data;
 
-      return res.data;
+      // full user data
+      const userRes = await api.get(`/users/${loginData.id}`);
+
+      // merge user + tokens
+      const fullUser = {
+        ...userRes.data,
+        accessToken: loginData.accessToken,
+        refreshToken: loginData.refreshToken,
+      };
+
+
+      // save
+      localStorage.setItem("currentUser", JSON.stringify(fullUser));
+
+      localStorage.setItem("accessToken", fullUser.accessToken);
+
+      return fullUser;
     } catch (err) {
       return rejectWithValue(
         err.response?.data?.message || "Invalid username or password",
@@ -22,27 +38,20 @@ export const login = createAsyncThunk(
   },
 );
 
-export const register = createAsyncThunk(
-  "auth/register",
-  async ({ username, email, password }, { rejectWithValue }) => {
-    try {
-      const res = await api.post("/auth/register", {
-        username,
-        email,
-        password,
-      });
 
-      return res.data;
-    } catch (err) {
-      return rejectWithValue(
-        err.response?.data?.message || "Registration failed",
-      );
-    }
-  },
-);
+export const register = createAsyncThunk("auth/register", async (data) => {
+  return {
+    user: {
+      username: data.username,
+      email: data.email,
+    },
+  };
+});
+
+const savedUser = localStorage.getItem("currentUser");
 
 const initialState = {
-  user: JSON.parse(localStorage.getItem("currentUser")) || null,
+  user: savedUser ? JSON.parse(savedUser) : null,
   token: localStorage.getItem("accessToken") || null,
   loading: false,
   error: null,

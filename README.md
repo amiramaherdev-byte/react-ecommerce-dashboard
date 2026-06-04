@@ -1,16 +1,117 @@
-# React + Vite
+# React E-Commerce Dashboard
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A responsive e-commerce dashboard built with React, React Bootstrap, React Router, and DummyJSON API.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### Authentication
 
-## React Compiler
+- User Login
+- Mock Register Page
+- Token Persistence using Local Storage
+- Protected Routes
+- Public Routes (Reverse Protection)
+- Logout Functionality
+- Auth Context for Global Authentication State
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Products
 
-## Expanding the ESLint configuration
+- Display Products List
+- Product Cards UI
+- Product Details Page
+- Search Products
+- Filter by Category
+- Sort Products
+- Pagination
+- Add Product
+- Edit Product
+- Delete Product
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### Users
+
+- Display Users List
+- View User Details
+- Search Users
+- Pagination
+- CRUD Operations
+
+### Carts
+
+- Display All Carts
+- View Cart Details
+- View User Carts
+- Add Cart
+- Update Cart
+- Delete Cart
+
+### Dashboard
+
+- Responsive Dashboard Layout
+- Navigation Sidebar
+- Statistics Cards
+- Products Management
+- Users Management
+- Carts Management
+
+## Tech Stack
+
+- React
+- React Router DOM
+- Redux Toolkit
+- React Redux
+- React Bootstrap
+- Axios
+- Context API (Authentication)
+- DummyJSON API
+- Vite
+
+## Installation
+
+Clone the repository:
+
+```bash
+git clone https://github.com/amiramaherdev-byte/react-ecommerce-dashboard.git
+```
+
+Navigate to the project folder:
+
+```bash
+cd react-ecommerce-dashboard
+```
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Start development server:
+
+```bash
+npm run dev
+```
+
+## Live Demo
+
+## Authentication
+
+Demo credentials provided by DummyJSON:
+
+```text
+Username: emilys
+Password: emilyspass
+```
+
+## API
+
+This project uses:
+
+https://dummyjson.com
+
+Documentation:
+
+https://dummyjson.com/docs
+
+## Author
+
+Developed as part of a React Frontend E-Commerce Project.

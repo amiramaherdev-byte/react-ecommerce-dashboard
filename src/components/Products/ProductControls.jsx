@@ -1,6 +1,18 @@
 import { Form, Row, Col } from "react-bootstrap";
+import SearchInput from "../Search/SearchInput";
+import { useDispatch, useSelector } from "react-redux";
+import { setProductSearch } from "../../features/products/productsSlice";
+import { useState } from "react";
 
-const ProductControls = ({ category, setCategory, sortBy, setSortBy, categories }) => {
+const ProductControls = ({
+  category,
+  setCategory,
+  sortBy,
+  setSortBy,
+  categories,
+  localSearch,
+  setLocalSearch
+}) => {
 
   return (
     <Row className="mb-3">
@@ -25,9 +37,16 @@ const ProductControls = ({ category, setCategory, sortBy, setSortBy, categories 
           <option value="price-desc">Price High → Low</option>
           <option value="rating">Rating</option>
           <option value="title-asc">Title: A → Z</option>
-          <option value="title-desc">Title: Z → A</option>{" "}
+          <option value="title-desc">Title: Z → A</option>
         </Form.Select>
       </Col>
+        <Form className="mt-4">
+   <SearchInput
+  value={localSearch}
+  onChange={(val) => setLocalSearch(val)}
+  placeholder="Search Products..."
+/>
+        </Form>
     </Row>
   );
 };

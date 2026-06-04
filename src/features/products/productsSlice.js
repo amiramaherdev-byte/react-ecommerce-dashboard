@@ -11,7 +11,7 @@ import {
 export const fetchProducts = createAsyncThunk(
   "products/fetchProducts",
   async (
-    { search, category, sortBy, currentPage },
+    { search, category, sortBy, currentPage = 1 } = {},
     { signal, rejectWithValue },
   ) => {
     try {
@@ -21,7 +21,6 @@ export const fetchProducts = createAsyncThunk(
       else if (category) endpoint = `/products/category/${category}`;
 
       let products = await getProducts(endpoint, signal);
-
       // filter
       if (search && category) {
         products = products.filter((p) => p.category === category);
@@ -117,6 +116,9 @@ const productsSlice = createSlice({
   },
 
   reducers: {
+    setCurrentPage: (state, action) => {
+      state.currentPage = action.payload;
+    },
     updateLocalProduct: (state, action) => {
       const { id, data } = action.payload;
 
@@ -203,7 +205,11 @@ const productsSlice = createSlice({
   },
 });
 
-export const { updateLocalProduct, deleteLocalProduct, setProductSearch } =
-  productsSlice.actions;
+export const {
+  updateLocalProduct,
+  deleteLocalProduct,
+  setProductSearch,
+  setCurrentPage,
+} = productsSlice.actions;
 
 export default productsSlice.reducer;
