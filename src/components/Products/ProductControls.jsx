@@ -11,9 +11,8 @@ const ProductControls = ({
   setSortBy,
   categories,
   localSearch,
-  setLocalSearch
+  setLocalSearch,
 }) => {
-
   return (
     <Row className="mb-3">
       <Col md={4}>
@@ -40,13 +39,14 @@ const ProductControls = ({
           <option value="title-desc">Title: Z → A</option>
         </Form.Select>
       </Col>
-        <Form className="mt-4">
-   <SearchInput
-  value={localSearch}
-  onChange={(val) => setLocalSearch(val)}
-  placeholder="Search Products..."
-/>
-        </Form>
+      <Form className="mt-4">
+        <SearchInput
+          value={localSearch}
+          onChange={(val) => setLocalSearch(val)}
+          placeholder="Search Products..."
+          className="form-control"
+        />
+      </Form>
     </Row>
   );
 };
