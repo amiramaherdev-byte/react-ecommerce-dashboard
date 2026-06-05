@@ -13,6 +13,7 @@ import {
 import LogoutButton from "./LogoutButton";
 
 const NavBar = ({ loggedInUser }) => {
+  const location = useLocation();
   const [show, setShow] = useState(false);
   // Desktop collapse
   const [collapsed, setCollapsed] = useState(false);
@@ -121,12 +122,18 @@ const NavBar = ({ loggedInUser }) => {
             </Link>
           </div>
         )}
-     
       </div>
 
-      {/* Logout */}
       <div className="mt-auto pt-4">
-        {token? (<LogoutButton collapsed={collapsed} />):(<Link to="/login"><Button>log in</Button></Link>)}
+        {token ? (
+          <LogoutButton collapsed={collapsed} />
+        ) : (
+          location.pathname !== "/login" && (
+            <Link to="/login">
+              <Button>Log In</Button>
+            </Link>
+          )
+        )}
       </div>
     </div>
   );
