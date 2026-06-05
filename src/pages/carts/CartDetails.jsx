@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import api from "../../services/api";
 import { Container, Spinner } from "react-bootstrap";
-import CartSummary from "../../components/Carts/CartSummary";
+import CartSummary from "../../components/carts/CartSummary";
 import CartProductsList from "../../components/Carts/CartProductsList";
 
 const CartDetails = () => {

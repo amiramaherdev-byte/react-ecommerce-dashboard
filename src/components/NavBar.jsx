@@ -12,7 +12,7 @@ import {
 } from "react-icons/fa";
 import LogoutButton from "./LogoutButton";
 
-const Navbar = ({ loggedInUser }) => {
+const NavBar = ({ loggedInUser }) => {
   const [show, setShow] = useState(false);
   // Desktop collapse
   const [collapsed, setCollapsed] = useState(false);
@@ -170,4 +170,4 @@ const Navbar = ({ loggedInUser }) => {
   );
 };
 
-export default Navbar;
+export default NavBar;

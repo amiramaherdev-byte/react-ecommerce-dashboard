@@ -15,8 +15,8 @@ import ProtectedRoute from "./routes/ProtectedRoute";
 import AuthRoute from "./routes/AuthRoute";
 import { toast, ToastContainer } from "react-toastify";
 import { fetchUsers } from "./features/users/usersThunks";
-import Navbar from "./components/Navbar";
 import { Spinner } from "react-bootstrap";
+import NavBar from "./components/NavBar";
 
 function App() {
   const dispatch = useDispatch();
@@ -33,7 +33,7 @@ function App() {
       {/* Nav bar */}
 
       <div className="d-flex flex-column ">
-        <Navbar loggedInUser={loggedInUser} />
+        <NavBar loggedInUser={loggedInUser} />
       </div>
 
       {/* Main Content */}
