@@ -12,9 +12,9 @@ import { Container, Form, Spinner, Button } from "react-bootstrap";
 
 import Pagination from "../../components/Pagination/Pagination";
 import { toast } from "react-toastify";
-import UserForm from "../../components/users/UserForm";
+import UserForm from "../../components/Users/UserForm";
 import { FaUsers } from "react-icons/fa";
-import UsersTable from "../../components/users/UsersTable";
+import UsersTable from "../../components/Users/UsersTable";
 import CustomModal from "../../components/UI/CustomModal";
 import SearchInput from "../../components/Search/SearchInput";
 

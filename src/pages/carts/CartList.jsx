@@ -1,7 +1,7 @@
 import { Container, Row, Col, Spinner } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import CartCard from "../../components/carts/CartCard";
+import CartCard from "../../components/Carts/CartCard";
 import { fetchAllCarts } from "../../features/carts/cartThunk";
 import { toast } from "react-toastify";
 import { FaShoppingCart } from "react-icons/fa";

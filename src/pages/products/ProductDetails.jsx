@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import api from "../../services/api";
 import { Container, Spinner } from "react-bootstrap";
-import CardDetails from "../../components/products/CardDetails";
+import CardDetails from "../../components/Products/CardDetails";
 
 const ProductDetails = () => {
   const { id } = useParams();
