@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import api from "../../services/api";
 import { Container, Spinner } from "react-bootstrap";
 import CartSummary from "../../components/carts/CartSummary";
-import CartProductsList from "../../components/Carts/CartProductsList";
+import CartProductsList from "../../components/carts/CartProductsList";
 
 const CartDetails = () => {
   const { id } = useParams();
