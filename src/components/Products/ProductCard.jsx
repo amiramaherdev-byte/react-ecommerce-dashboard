@@ -6,7 +6,7 @@ import {
   deleteProduct,
   deleteLocalProduct,
 } from "../../features/products/productsSlice";
-import "./products.css";
+import "./Products.css";
 import { toast } from "react-toastify";
 import { addToCart } from "../../features/carts/cartSlice";
 
