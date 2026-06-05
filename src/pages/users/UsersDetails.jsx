@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import api from "../../services/api";
-import UserCard from "../../components/Users/UserCard";
+import UserCard from "../../components/users/UserCard";
 
 const UsersDetails = () => {
   const { id } = useParams();

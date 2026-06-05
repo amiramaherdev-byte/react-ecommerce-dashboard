@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { Col, Container, Row, Spinner, Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import ProductCard from "../../components/Products/ProductCard";
+import ProductCard from "../../components/products/ProductCard";
 import Pagination from "../../components/Pagination/Pagination";
-import ProductControls from "../../components/Products/ProductControls";
+import ProductControls from "../../components/products/ProductControls";
 import CustomModal from "../../components/UI/CustomModal";
 
 import {
@@ -11,7 +11,7 @@ import {
   getCategories,
   setCurrentPage,
 } from "../../features/products/productsSlice";
-import ProductForm from "../../components/Products/ProductForm";
+import ProductForm from "../../components/products/ProductForm";
 import { toast } from "react-toastify";
 import { FaBoxOpen } from "react-icons/fa";
 
@@ -26,7 +26,7 @@ const ProductList = ({ loggedInUser }) => {
   const [showModal, setShowModal] = useState(false);
   const openModal = () => setShowModal(true);
   const closeModal = () => setShowModal(false);
-const [localSearch, setLocalSearch] = useState(search || "");
+  const [localSearch, setLocalSearch] = useState(search || "");
   const [category, setCategory] = useState("");
   const [sortBy, setSortBy] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
