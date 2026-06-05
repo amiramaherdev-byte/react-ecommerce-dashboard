@@ -93,6 +93,8 @@ npm run dev
 
 ## Live Demo
 
+🔗 https://react-ecommerce-dashboard-f935.vercel.app
+
 ## Authentication
 
 Demo credentials provided by DummyJSON:
