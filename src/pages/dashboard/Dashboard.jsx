@@ -14,8 +14,8 @@ import { Link } from "react-router-dom";
 import DashboardHeader from "../../components/Dashboard/DashboardHeader";
 import StatsCards from "../../components/Dashboard/StatsCards";
 import useDashboardData from "../../hooks/useDashboardData";
-import UsersTable from "../../components/users/UsersTable";
-import UserForm from "../../components/users/UserForm";
+import UsersTable from "../../components/Users/UsersTable";
+import UserForm from "../../components/Users/UserForm";
 import CustomModal from "../../components/UI/CustomModal";
 
 const Dashboard = () => {

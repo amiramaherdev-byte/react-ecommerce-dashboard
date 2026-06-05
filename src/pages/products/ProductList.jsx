@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { Col, Container, Row, Spinner, Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import ProductCard from "../../components/products/ProductCard";
+import ProductCard from "../../components/Products/ProductCard";
 import Pagination from "../../components/Pagination/Pagination";
-import ProductControls from "../../components/products/ProductControls";
+import ProductControls from "../../components/Products/ProductControls";
 import CustomModal from "../../components/UI/CustomModal";
 
 import {
