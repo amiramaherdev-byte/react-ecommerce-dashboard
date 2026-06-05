@@ -11,7 +11,7 @@ import {
   getCategories,
   setCurrentPage,
 } from "../../features/products/productsSlice";
-import ProductForm from "../../components/products/ProductForm";
+import ProductForm from "../../components/Products/ProductForm";
 import { toast } from "react-toastify";
 import { FaBoxOpen } from "react-icons/fa";
 
