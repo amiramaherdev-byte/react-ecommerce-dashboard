@@ -39,7 +39,8 @@ const UsersTable = ({ openModal , latestUsers }) => {
   const closeModal = () => setShowModal(false);
 
   return (
-    <Table striped hover responsive>
+    <Table striped hover   
+>
       <thead>
         <tr>
           <th>Name</th>
@@ -53,7 +54,12 @@ const UsersTable = ({ openModal , latestUsers }) => {
           tableUsers.map((user) => (
             <tr key={user.id}>
               <td>{user.firstName}</td>
-              <td>{user.email}</td>
+              <td   style={{
+    maxWidth: "120px",
+    wordBreak: "break-word",
+    whiteSpace: "normal",
+  }}
+>{user.email}</td>
               <td>{user.role}</td>
               <td>
                 <Dropdown>

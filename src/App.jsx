@@ -29,7 +29,7 @@ function App() {
   }, [dispatch]);
 
   return (
-    <div className="d-flex vh-100 overflow-hidden">
+    <div className="d-flex vh-100">
       {/* Nav bar */}
 
       <div className="d-flex flex-column ">
@@ -37,8 +37,9 @@ function App() {
       </div>
 
       {/* Main Content */}
-      <div className="flex-grow-1 bg-light d-flex flex-column">
-        <div className="p-4 overflow-auto flex-grow-1">
+      <div className="flex-grow-1 bg-light d-flex flex-column"   style={{ minWidth: 0 }}
+>
+        <div className="py-4 overflow-auto flex-grow-1">
           <Routes>
             <Route
               path="/"

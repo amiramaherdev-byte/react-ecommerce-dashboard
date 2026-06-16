@@ -12,6 +12,10 @@ import {
 } from "react-icons/fa";
 import LogoutButton from "./LogoutButton";
 
+const handleMobileNavClick = () => {
+  setShow(false);
+};
+
 const NavBar = ({ loggedInUser }) => {
   const location = useLocation();
   const [show, setShow] = useState(false);
@@ -52,6 +56,7 @@ const NavBar = ({ loggedInUser }) => {
           {loggedInUser?.role === "admin" && (
             <Nav.Link
               as={Link}
+              onClick={handleMobileNavClick}
               to="/dashboard"
               className={`text-white d-flex align-items-center ${
                 collapsed ? "justify-content-center" : "gap-2"
@@ -66,6 +71,7 @@ const NavBar = ({ loggedInUser }) => {
           <Nav.Link
             as={Link}
             to="/products"
+            onClick={handleMobileNavClick}
             className={`text-white d-flex align-items-center ${
               collapsed ? "justify-content-center" : "gap-2"
             }`}
@@ -78,6 +84,7 @@ const NavBar = ({ loggedInUser }) => {
           {loggedInUser?.role === "admin" && (
             <Nav.Link
               as={Link}
+              onClick={handleMobileNavClick}
               to="/carts"
               className={`text-white d-flex align-items-center ${
                 collapsed ? "justify-content-center" : "gap-2"
@@ -93,6 +100,7 @@ const NavBar = ({ loggedInUser }) => {
             <Nav.Link
               as={Link}
               to="/users"
+              onClick={handleMobileNavClick}
               className={`text-white d-flex align-items-center ${
                 collapsed ? "justify-content-center" : "gap-2"
               }`}
@@ -110,6 +118,7 @@ const NavBar = ({ loggedInUser }) => {
           >
             <Link
               to="/cart"
+              onClick={handleMobileNavClick}
               className="position-relative d-inline-block text-white"
             >
               <FaShoppingCart size={24} />
