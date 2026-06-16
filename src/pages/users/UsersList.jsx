@@ -18,7 +18,10 @@ import UsersTable from "../../components/Users/UsersTable";
 import CustomModal from "../../components/UI/CustomModal";
 import SearchInput from "../../components/Search/SearchInput";
 
-const UsersList = ({loggedInUser}) => {
+const UsersList = () => {
+
+    const { user: loggedInUser } = useSelector((state) => state.auth);
+
   const dispatch = useDispatch();
   const { users, loading, search, currentPage, totalUsers, error } =
     useSelector((state) => state.users);
@@ -110,14 +113,12 @@ const UsersList = ({loggedInUser}) => {
               className="fw-semibold px-4 py-2 rounded-3"
               onClick={openModal}
             >
-              + Add Product
+              + Add User
             </Button>
           )}
 
 
-            <Button variant="primary" onClick={() => openModal()}>
-              + Add User
-            </Button>
+         
           </div>
 
           <UsersTable
