@@ -19,9 +19,6 @@ import CustomModal from "../../components/UI/CustomModal";
 import SearchInput from "../../components/Search/SearchInput";
 
 const UsersList = () => {
-
-    const { user: loggedInUser } = useSelector((state) => state.auth);
-
   const dispatch = useDispatch();
   const { users, loading, search, currentPage, totalUsers, error } =
     useSelector((state) => state.users);
@@ -37,7 +34,6 @@ const UsersList = () => {
     setShowModal(true);
   };
   const closeModal = () => setShowModal(false);
-
 
   useEffect(() => {
     dispatch(
@@ -106,19 +102,9 @@ const UsersList = () => {
         <>
           <div className="d-flex justify-content-between align-items-center mb-3">
             <h4 className="mb-0">Users</h4>
-
- {loggedInUser?.role === "admin" && (
-            <Button
-              variant="light"
-              className="fw-semibold px-4 py-2 rounded-3"
-              onClick={openModal}
-            >
+            <Button variant="primary" onClick={() => openModal()}>
               + Add User
             </Button>
-          )}
-
-
-         
           </div>
 
           <UsersTable
