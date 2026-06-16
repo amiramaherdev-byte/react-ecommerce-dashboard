@@ -12,10 +12,6 @@ import {
 } from "react-icons/fa";
 import LogoutButton from "./LogoutButton";
 
-const handleMobileNavClick = () => {
-  setShow(false);
-};
-
 const NavBar = ({ loggedInUser }) => {
   const location = useLocation();
   const [show, setShow] = useState(false);
@@ -24,6 +20,10 @@ const NavBar = ({ loggedInUser }) => {
   const cartItems = useSelector((state) => state.cart.items || []);
   const totalQty = cartItems.reduce((sum, item) => sum + item.quantity, 0);
   const { token } = useSelector((state) => state.auth);
+
+  const handleMobileNavClick = () => {
+    setShow(false);
+  };
 
   const sidebarContent = (
     <div fluid className="d-flex flex-column h-100">
@@ -41,7 +41,7 @@ const NavBar = ({ loggedInUser }) => {
         </div>
         {/* Logo */}
         {!collapsed && (
-          <h3 className="mb-4">
+          <h3 className="mb-4  d-none d-md-block">
             <Link to="/dashboard" className="text-white text-decoration-none">
               My Store
             </Link>
