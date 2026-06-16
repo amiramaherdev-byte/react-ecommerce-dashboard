@@ -1,15 +1,12 @@
 import React from "react";
 import { Col, Row, Button } from "react-bootstrap";
 const Pagination = ({ currentPage, loading, setCurrentPage, totalPages }) => {
-
-  console.log(currentPage);
-console.log(typeof currentPage);
   return (
     <Row>
       <Col className="d-flex justify-content-center mt-2 flex-wrap">
         <Button
           disabled={currentPage === 1 || loading}
-          onClick={() => setCurrentPage(currentPage-1)}
+          onClick={() => setCurrentPage(currentPage - 1)}
         >
           Prev
         </Button>
@@ -32,7 +29,7 @@ console.log(typeof currentPage);
 
         <Button
           disabled={currentPage === totalPages}
-          onClick={() => setCurrentPage(currentPage+1)}
+          onClick={() => setCurrentPage(currentPage + 1)}
         >
           Next
         </Button>
