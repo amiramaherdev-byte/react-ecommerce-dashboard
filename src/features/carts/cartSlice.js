@@ -16,7 +16,7 @@ const saveCart = (items) => {
 const cartSlice = createSlice({
   name: "cart",
   initialState: {
-    items: getInitialCart(),
+  items: getInitialCart(),
   },
   reducers: {
   addToCart: (state, action) => {

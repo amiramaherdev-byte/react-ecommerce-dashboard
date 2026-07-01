@@ -10,24 +10,18 @@ import Cart from "./pages/carts/Cart";
 import CartList from "./pages/carts/CartList";
 import CartDetails from "./pages/carts/CartDetails";
 import UsersList from "./pages/users/UsersList";
-import UsersDetails from "./pages/users/UsersDetails";
+import UserDetails from "./pages/users/UserDetails";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import AuthRoute from "./routes/AuthRoute";
 import { toast, ToastContainer } from "react-toastify";
-import { fetchUsers } from "./features/users/usersThunks";
 import { Spinner } from "react-bootstrap";
 import NavBar from "./components/NavBar";
 
 function App() {
   const dispatch = useDispatch();
 
-  const { user: loggedInUser } = useSelector((state) => state.auth);
-
-  // fetch users
-  useEffect(() => {
-    dispatch(fetchUsers());
-  }, [dispatch]);
-
+  const { user: loggedInUser } = useSelector((state) => state.auth); //authSlice
+  console.log(loggedInUser);
   return (
     <div className="d-flex vh-100">
       {/* Nav bar */}
@@ -37,8 +31,10 @@ function App() {
       </div>
 
       {/* Main Content */}
-      <div className="flex-grow-1 bg-light d-flex flex-column"   style={{ minWidth: 0 }}
->
+      <div
+        className="flex-grow-1 bg-light d-flex flex-column"
+        style={{ minWidth: 0 }}
+      >
         <div className="py-4 overflow-auto flex-grow-1">
           <Routes>
             <Route
@@ -59,8 +55,18 @@ function App() {
                 </AuthRoute>
               }
             />
-            <Route path="/register" element={<Register />} />
-            <Route path="/products" element={<ProductList loggedInUser={loggedInUser} />} />
+            <Route
+              path="/register"
+              element={
+                <AuthRoute>
+                  <Register />
+                </AuthRoute>
+              }
+            />
+            <Route
+              path="/products"
+              element={<ProductList loggedInUser={loggedInUser} />}
+            />
             <Route path="/products/:id" element={<ProductDetails />} />
             <Route
               path="/cart"
@@ -90,12 +96,11 @@ function App() {
               path="/users"
               element={
                 <ProtectedRoute>
-                  <UsersList  />
+                  <UsersList />
                 </ProtectedRoute>
               }
             />
 
-            <Route path="/users/:id" element={<UsersDetails />} />
             <Route
               path="/dashboard"
               element={

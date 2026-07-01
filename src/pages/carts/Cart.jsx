@@ -19,6 +19,7 @@ const Cart = ({ loggedInUser }) => {
   const dispatch = useDispatch();
   const items = useSelector((state) => state.cart.items);
 
+
   useEffect(() => {
     if (loggedInUser) {
       dispatch(fetchCart(loggedInUser.id)).then((action) => {
