@@ -1,5 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchUsers, addUser, updateUser, deleteUser } from "./usersThunks";
+import {
+  fetchUsers,
+  addUser,
+  updateUser,
+  deleteUser,
+  fetchUserById,
+} from "./usersThunks";
 
 const initialState = {
   users: [],
@@ -8,6 +14,7 @@ const initialState = {
   search: "",
   currentPage: 1,
   totalUsers: 0,
+  user: null,
 };
 
 const usersSlice = createSlice({
@@ -47,6 +54,21 @@ const usersSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addCase(fetchUserById.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+
+      .addCase(fetchUserById.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload;
+      })
+
+      .addCase(fetchUserById.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      
       .addCase(fetchUsers.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -83,6 +105,5 @@ export const {
   updateLocalUser,
   addLocalUser,
   deleteLocalUser,
-
 } = usersSlice.actions;
 export default usersSlice.reducer;

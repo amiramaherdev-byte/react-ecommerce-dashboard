@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 
-import { Pencil, Trash, Eye, ThreeDotsVertical } from "react-bootstrap-icons";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchUsers, deleteUser } from "../../features/users/usersThunks";
 import {
@@ -17,23 +16,26 @@ import { FaUsers } from "react-icons/fa";
 import UsersTable from "../../components/Users/UsersTable";
 import CustomModal from "../../components/UI/CustomModal";
 import SearchInput from "../../components/Search/SearchInput";
-
+import useUserModal from "../../hooks/useUserModal";
+import UserModal from "../../components/Users/UserModal";
 const UsersList = () => {
   const dispatch = useDispatch();
   const { users, loading, search, currentPage, totalUsers, error } =
     useSelector((state) => state.users);
 
-  const [showModal, setShowModal] = useState(false);
-  const [selectedUser, setSelectedUser] = useState(null);
   const [sortBy, setSortBy] = useState("");
   const itemsPerPage = 6;
   const totalPages = Math.ceil(totalUsers / itemsPerPage);
 
-  const openModal = (user = null) => {
-    setSelectedUser(user);
-    setShowModal(true);
-  };
-  const closeModal = () => setShowModal(false);
+  const {
+    showModal,
+    selectedUser,
+    modalType,
+    openAddModal,
+    openEditModal,
+    openViewModal,
+    closeModal,
+  } = useUserModal();
 
   useEffect(() => {
     dispatch(
@@ -102,29 +104,27 @@ const UsersList = () => {
         <>
           <div className="d-flex justify-content-between align-items-center mb-3">
             <h4 className="mb-0">Users</h4>
-            <Button variant="primary" onClick={() => openModal()}>
+            <Button variant="primary" onClick={openAddModal}>
               + Add User
             </Button>
           </div>
 
           <UsersTable
             users={users}
-            openModal={openModal}
+            openEditModal={openEditModal}
+            openViewModal={openViewModal}
             showModal={showModal}
           ></UsersTable>
 
-          {/* Modal for Add/Edit */}
-          <CustomModal
-            show={showModal}
-            handleClose={closeModal}
-            title={selectedUser ? "Edit User" : "Add User"}
-          >
-            <UserForm
-              user={selectedUser}
-              closeModal={closeModal}
-              dispatch={dispatch}
-            />
-          </CustomModal>
+    
+
+       <UserModal
+  show={showModal}
+  handleClose={closeModal}
+  modalType={modalType}
+  selectedUser={selectedUser}
+  dispatch={dispatch}
+/>
 
           <Pagination
             currentPage={currentPage}

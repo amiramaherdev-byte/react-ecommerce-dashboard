@@ -1,8 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Dropdown } from "react-bootstrap";
-import { Pencil, Trash, Eye, ThreeDotsVertical } from "react-bootstrap-icons";
-
 import { fetchAllCarts } from "../../features/carts/cartThunk";
 import {
   fetchProducts,
@@ -17,21 +15,25 @@ import useDashboardData from "../../hooks/useDashboardData";
 import UsersTable from "../../components/Users/UsersTable";
 import UserForm from "../../components/Users/UserForm";
 import CustomModal from "../../components/UI/CustomModal";
+import useUserModal from "../../hooks/useUserModal";
+import UserModal from "../../components/Users/UserModal";
 
 const Dashboard = () => {
-  const { stats, latestUsers, productsPerCategory, users } = useDashboardData();
-  const [selectedUser, setSelectedUser] = useState(null);
-  const [showModal, setShowModal] = useState(false);
+  const { stats, latestUsers, users } = useDashboardData();
 
   const dispatch = useDispatch();
 
-  const openModal = (user = null) => {
-    setSelectedUser(user);
-    setShowModal(true);
-  };
 
-  const closeModal = () => setShowModal(false);
-
+  
+  const {
+    showModal,
+    selectedUser,
+    modalType,
+    openAddModal,
+    openEditModal,
+    openViewModal,
+    closeModal,
+  } = useUserModal();
   return (
     <div className="container-fluid">
       <DashboardHeader />
@@ -42,16 +44,19 @@ const Dashboard = () => {
 
       {/* Latest Users */}
 
-      <UsersTable openModal={openModal} latestUsers={latestUsers}></UsersTable>
+      <UsersTable
+        openViewModal={openViewModal}
+        openEditModal={openEditModal}
+        latestUsers={latestUsers}
+      ></UsersTable>
 
-      {/* Modal for Add/Edit */}
-      <CustomModal
-        show={showModal}
-        handleClose={closeModal}
-        title={selectedUser ? "Edit User" : "Add User"}
-      >
-        <UserForm user={selectedUser}  closeModal={closeModal} dispatch={dispatch} />
-      </CustomModal>
+  <UserModal
+  show={showModal}
+  handleClose={closeModal}
+  modalType={modalType}
+  selectedUser={selectedUser}
+  dispatch={dispatch}
+/>
     </div>
   );
 };

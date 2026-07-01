@@ -15,14 +15,12 @@ export const login = createAsyncThunk(
 
       // full user data
       const userRes = await api.get(`/users/${loginData.id}`);
-
       // merge user + tokens
       const fullUser = {
         ...userRes.data,
         accessToken: loginData.accessToken,
         refreshToken: loginData.refreshToken,
       };
-
 
       // save
       localStorage.setItem("currentUser", JSON.stringify(fullUser));
@@ -73,7 +71,7 @@ const authSlice = createSlice({
 
   extraReducers: (builder) => {
     builder
-      // 🔐 LOGIN
+      // LOGIN
       .addCase(login.pending, (state) => {
         state.loading = true;
         state.error = null;

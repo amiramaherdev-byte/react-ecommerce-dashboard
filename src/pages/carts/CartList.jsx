@@ -23,28 +23,28 @@ const CartList = () => {
 
   return (
     <Container>
-   <div
-  className="topbar text-white px-4 py-3 mb-4 rounded-4 shadow"
-  style={{
-    background: "linear-gradient(135deg, #f59e0b, #ea580c)",
-  }}
->
-  <div className="d-flex align-items-center gap-3">
-    <div
-      className="bg-white text-warning rounded-circle d-flex align-items-center justify-content-center"
-      style={{ width: "50px", height: "50px" }}
-    >
-      <FaShoppingCart size={22} />
-    </div>
+      <div
+        className="topbar text-white px-4 py-3 mb-4 rounded-4 shadow"
+        style={{
+          background: "linear-gradient(135deg, #f59e0b, #ea580c)",
+        }}
+      >
+        <div className="d-flex align-items-center gap-3">
+          <div
+            className="bg-white text-warning rounded-circle d-flex align-items-center justify-content-center"
+            style={{ width: "50px", height: "50px" }}
+          >
+            <FaShoppingCart size={22} />
+          </div>
 
-    <div>
-      <h3 className="mb-0 fw-bold">Carts</h3>
-      <p className="mb-0 text-light opacity-75">
-        Monitor customer carts and orders
-      </p>
-    </div>
-  </div>
-</div>
+          <div>
+            <h3 className="mb-0 fw-bold">Carts</h3>
+            <p className="mb-0 text-light opacity-75">
+              Monitor customer carts and orders
+            </p>
+          </div>
+        </div>
+      </div>
 
       {loading ? (
         <Spinner />
