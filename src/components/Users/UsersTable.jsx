@@ -1,13 +1,18 @@
 import React, { useState } from "react";
 import { Table, Dropdown, Button } from "react-bootstrap";
-import CustomModal from "../../components/UI/CustomModal";
 import { Eye, ThreeDotsVertical, Trash } from "react-bootstrap-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { deleteUser } from "../../features/users/usersThunks";
 import { deleteLocalUser } from "../../features/users/usersSlice";
-
-const UsersTable = ({ openModal, latestUsers }) => {
+import { useNavigate } from "react-router-dom";
+const UsersTable = ({
+  openModal,
+  latestUsers,
+  openEditModal,
+  openViewModal,
+}) => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { users, loading, search, currentPage, totalUsers, error } =
     useSelector((state) => state.users);
@@ -69,8 +74,11 @@ const UsersTable = ({ openModal, latestUsers }) => {
                     <ThreeDotsVertical />
                   </Dropdown.Toggle>
                   <Dropdown.Menu>
-                    <Dropdown.Item onClick={() => openModal(user)}>
-                      <Eye /> View / Edit
+                    <Dropdown.Item onClick={() => openViewModal(user)}>
+                      <Eye /> View
+                    </Dropdown.Item>
+                    <Dropdown.Item onClick={() => openEditModal(user)}>
+                      <Eye /> Edit
                     </Dropdown.Item>
 
                     <Dropdown.Item
