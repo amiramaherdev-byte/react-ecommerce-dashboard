@@ -1,6 +1,6 @@
 const CartItem = ({ product }) => {
   return (
-    <div key={product.id} className="">
+    <div key={product.id} >
       {product.title} - ${product.price} x{product.quantity}
     </div>
   );

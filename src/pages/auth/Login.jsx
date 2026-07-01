@@ -5,6 +5,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../features/auth/authSlice";
 import { toast } from "react-toastify";
 import { validateAuth } from "../../utils/validation/authValidation";
+import { setCartFromAPI } from "../../features/carts/cartSlice";
+import { fetchCart } from "../../features/carts/cartThunk";
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -37,6 +39,10 @@ const Login = () => {
     const res = await dispatch(login({ identifier, password }));
 
     if (res.meta.requestStatus === "fulfilled") {
+      const cartAction = await dispatch(fetchCart(res.payload.id));
+
+      dispatch(setCartFromAPI(cartAction.payload));
+
       navigate("/dashboard");
     }
   };

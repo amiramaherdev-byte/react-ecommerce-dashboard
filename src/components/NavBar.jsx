@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { Button, Container, Form, Nav, Offcanvas } from "react-bootstrap";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
+import { logout } from "../features/auth/authSlice";
+
 import {
   FaShoppingCart,
   FaBars,
@@ -9,10 +11,18 @@ import {
   FaBoxOpen,
   FaUsers,
   FaShoppingBag,
+  FaSignOutAlt,
+  FaSignInAlt,
 } from "react-icons/fa";
-import LogoutButton from "./LogoutButton";
+import SidebarButton from "./SidebarButton";
+
+const handleMobileNavClick = () => {
+  setShow(false);
+};
 
 const NavBar = ({ loggedInUser }) => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const location = useLocation();
   const [show, setShow] = useState(false);
   // Desktop collapse
@@ -20,13 +30,12 @@ const NavBar = ({ loggedInUser }) => {
   const cartItems = useSelector((state) => state.cart.items || []);
   const totalQty = cartItems.reduce((sum, item) => sum + item.quantity, 0);
   const { token } = useSelector((state) => state.auth);
-
-  const handleMobileNavClick = () => {
-    setShow(false);
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate("/login");
   };
-
   const sidebarContent = (
-    <div fluid className="d-flex flex-column h-100">
+    <div className="d-flex flex-column h-100">
       {/* Top */}
       <div>
         {/* Collapse Button */}
@@ -92,7 +101,7 @@ const NavBar = ({ loggedInUser }) => {
             >
               <FaShoppingCart />
 
-              {!collapsed && "carts"}
+              {!collapsed && "Carts"}
             </Nav.Link>
           )}
 
@@ -135,12 +144,22 @@ const NavBar = ({ loggedInUser }) => {
 
       <div className="mt-auto pt-4">
         {token ? (
-          <LogoutButton collapsed={collapsed} />
+          <SidebarButton
+            collapsed={collapsed}
+            title="Log Out"
+            icon={<FaSignOutAlt />}
+            variant="danger"
+            onClick={handleLogout}
+          />
         ) : (
           location.pathname !== "/login" && (
-            <Link to="/login">
-              <Button>Log In</Button>
-            </Link>
+            <SidebarButton
+              collapsed={collapsed}
+              title="Log In"
+              icon={<FaSignInAlt />}
+              variant="primary"
+              onClick={() => navigate("/login")}
+            />
           )
         )}
       </div>
