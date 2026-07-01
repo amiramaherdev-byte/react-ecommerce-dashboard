@@ -4,28 +4,35 @@ import api from "../../services/api";
 import { Container, Spinner } from "react-bootstrap";
 import CartSummary from "../../components/Carts/CartSummary";
 import CartProductsList from "../../components/Carts/CartProductsList";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchAllCarts } from "../../features/carts/cartThunk";
+import { toast } from "react-toastify";
 
 const CartDetails = () => {
   const { id } = useParams();
-  const [cart, setCart] = useState(null);
+  const { carts, loading, error } = useSelector((state) => state.carts);
+  const dispatch = useDispatch();
   useEffect(() => {
-    const fetchCart = async () => {
-      try {
-        const response = await api.get(`/carts/${id}`);
-        setCart(response.data);
-      } catch (error) {}
-    };
+    dispatch(fetchAllCarts());
+  }, [dispatch]);
 
-    fetchCart();
-  }, [id]);
+  const cart = carts.find((cart) => cart.id === Number(id));
 
-  if (!cart) return <Spinner />;
+  useEffect(() => {
+    if (error) {
+      toast.error(error);
+    }
+  }, [error]);
+
+  if (loading) return <Spinner />;
+  if (error) return null;
+
+  if (!cart) return <h3>No carts found</h3>;
+
   return (
     <Container>
       <CartSummary cart={cart}></CartSummary>
       <CartProductsList products={cart.products}></CartProductsList>
-          <div className="mt-4 p-3 border rounded bg-light">
-    </div>
     </Container>
   );
 };
