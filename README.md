@@ -93,7 +93,7 @@ npm run dev
 
 ## Live Demo
 
-🔗 react-ecommerce-dashboard-green.vercel.app
+🔗 https://react-ecommerce-dashboard-fajcxulp1.vercel.app
 
 ## Authentication
 
