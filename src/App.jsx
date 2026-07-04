@@ -21,7 +21,6 @@ function App() {
   const dispatch = useDispatch();
 
   const { user: loggedInUser } = useSelector((state) => state.auth); //authSlice
-  console.log(loggedInUser);
   return (
     <div className="d-flex vh-100">
       {/* Nav bar */}

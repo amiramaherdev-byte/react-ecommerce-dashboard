@@ -44,7 +44,12 @@ const UserForm = ({ user, closeModal, dispatch }) => {
 
       closeModal();
     } catch (err) {
-      toast.error(err.message || "Something went wrong");
+      toast.error(
+        err.response?.data?.message || err.message || "Something went wrong",
+      );
+      if (import.meta.env.DEV) {
+        console.error(err);
+      }
     }
   };
 

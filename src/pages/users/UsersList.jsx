@@ -22,6 +22,7 @@ const UsersList = () => {
   const dispatch = useDispatch();
   const { users, loading, search, currentPage, totalUsers, error } =
     useSelector((state) => state.users);
+  const [localSearch, setLocalSearch] = useState(search || "");
 
   const [sortBy, setSortBy] = useState("");
   const itemsPerPage = 6;
@@ -50,6 +51,22 @@ const UsersList = () => {
       .catch((err) => toast.error(err));
   }, [dispatch, search, currentPage, sortBy]);
 
+  // debounce search
+
+useEffect(() => {
+  const handler = setTimeout(() => {
+    dispatch(setSearch(localSearch));
+    dispatch(setCurrentPage(1));
+  }, 500);
+
+  return () => clearTimeout(handler);
+}, [localSearch, dispatch]);
+
+  useEffect(() => {
+  if (error) {
+    toast.error(error);
+  }
+}, [error]);
   return (
     <Container>
       <div
@@ -74,13 +91,12 @@ const UsersList = () => {
           </div>
         </div>
       </div>
-      {error && toast.error({ error })}
 
       {/* Search */}
       <Form className="mt-4 mb-3 d-flex gap-2">
         <SearchInput
-          value={search}
-          onChange={(val) => dispatch(setSearch(val))}
+          value={localSearch}
+          onChange={(val) => setLocalSearch(val)}
           placeholder="Search Users..."
           className="form-control"
         />
@@ -116,15 +132,13 @@ const UsersList = () => {
             showModal={showModal}
           ></UsersTable>
 
-    
-
-       <UserModal
-  show={showModal}
-  handleClose={closeModal}
-  modalType={modalType}
-  selectedUser={selectedUser}
-  dispatch={dispatch}
-/>
+          <UserModal
+            show={showModal}
+            handleClose={closeModal}
+            modalType={modalType}
+            selectedUser={selectedUser}
+            dispatch={dispatch}
+          />
 
           <Pagination
             currentPage={currentPage}
