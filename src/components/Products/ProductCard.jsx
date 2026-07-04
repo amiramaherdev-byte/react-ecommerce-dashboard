@@ -27,13 +27,16 @@ const ProductCard = ({ product, onEdit, loggedInUser }) => {
       toast.error(
         err.response?.data?.message || err.message || "Something went wrong",
       );
-      console.error(err);
+      if (import.meta.env.DEV) {
+        console.error(err);
+      }
     }
   };
 
   const handleAdd = () => {
     if (!loggedInUser) {
       toast.error("please login first");
+      return
     }
 
     if (!product.id || !product.title || product.price == null) {
@@ -50,6 +53,7 @@ const ProductCard = ({ product, onEdit, loggedInUser }) => {
         image: product.images?.[0] || "", // optional
       }),
     );
+    toast.success("Added to cart");
   };
 
   return (
@@ -123,7 +127,7 @@ const ProductCard = ({ product, onEdit, loggedInUser }) => {
             className="w-100 mt-1"
             onClick={handleAdd}
           >
-            Add to card
+            Add to cart
           </Button>
         </div>
       </Card.Body>

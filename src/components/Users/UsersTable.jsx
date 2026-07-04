@@ -29,12 +29,15 @@ const UsersTable = ({ openModal, latestUsers , openEditModal , openViewModal  })
         toast.success("User deleted successfully");
       }
     } catch (err) {
-      toast.error(
-        err.response?.data?.message || err.message || "Something went wrong",
-      );
-      console.error(err);
-    }
-  };
+          toast.error(
+            err.response?.data?.message || err.message || "Something went wrong",
+          );
+          if (import.meta.env.DEV) {
+            console.error(err);
+          }
+        }
+      };
+    
 
   const closeModal = () => setShowModal(false);
 

@@ -36,7 +36,6 @@ const ProductForm = ({ setShowModal, productToEdit, setProductToEdit }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-
     const productData = {
       title,
       price: parseFloat(price),
@@ -46,33 +45,40 @@ const ProductForm = ({ setShowModal, productToEdit, setProductToEdit }) => {
         "https://dummyimage.com/150x150/ccc/000&text=Product",
       ],
     };
-  
-  try {
-  if (productToEdit) {
-    if (productToEdit.id > 100) {
-if (productToEdit.isLocal) {
-  dispatch(updateLocalProduct({ id: productToEdit.id, data: productData }));
-}
-      toast.success("Product updated locally");
-    } else {
-      await dispatch(
-        updateProduct({ id: productToEdit.id, data: productData })
-      ).unwrap();
 
-      toast.success("Product updated successfully");
+    try {
+      if (productToEdit) {
+        if (productToEdit.id > 100) {
+          if (productToEdit.isLocal) {
+            dispatch(
+              updateLocalProduct({ id: productToEdit.id, data: productData }),
+            );
+          }
+          toast.success("Product updated locally");
+        } else {
+          await dispatch(
+            updateProduct({ id: productToEdit.id, data: productData }),
+          ).unwrap();
+
+          toast.success("Product updated successfully");
+        }
+      } else {
+        await dispatch(createProduct(productData)).unwrap();
+        toast.success("New product added successfully");
+      }
+
+      setShowModal(false);
+      setProductToEdit(null);
+    } catch (err) {
+      toast.error(
+        err.response?.data?.message || err.message || "Something went wrong",
+      );
+      if (import.meta.env.DEV) {
+        console.error(err);
+      }
     }
-  } else {
-    await dispatch(createProduct(productData)).unwrap();
-    toast.success("New product added successfully");
-  }
+  };
 
-  setShowModal(false);
-  setProductToEdit(null);
-} catch (err) {
-  toast.error(
-    err.response?.data?.message || err.message || "Something went wrong"
-  );
-}}
   const resetForm = () => {
     setTitle("");
     setPrice("");

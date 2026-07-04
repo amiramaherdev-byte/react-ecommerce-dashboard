@@ -61,7 +61,9 @@ const ProductList = ({ loggedInUser }) => {
             err.message ||
             "Failed to fetch products",
         );
-        console.error(err);
+        if (import.meta.env.DEV) {
+          console.error(err);
+        }
       }
     };
     fetchData();
@@ -103,15 +105,8 @@ const ProductList = ({ loggedInUser }) => {
           )}
         </div>
       </div>
-      {/* Loading */}
-      {status === "loading" ? (
-        <div className="d-flex justify-content-center align-items-center vh-100">
-          <Spinner animation="border" />
-        </div>
-      ) : (
-        <>
-          {/* Filters */}
-          <ProductControls
+
+       <ProductControls
             category={category}
             setCategory={setCategory}
             sortBy={sortBy}
@@ -120,6 +115,15 @@ const ProductList = ({ loggedInUser }) => {
             localSearch={localSearch}
             setLocalSearch={setLocalSearch}
           />
+      {/* Loading */}
+      {status === "loading" ? (
+        <div className="d-flex justify-content-center align-items-center vh-100">
+          <Spinner animation="border" />
+        </div>
+      ) : (
+        <>
+          {/* Filters */}
+         
 
           {/* Product Grid */}
           <Row xs={1} md={3} lg={4} className="g-4">
